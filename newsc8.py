@@ -11,327 +11,174 @@ from googletrans import Translator
 from humanfriendly import format_timespan, format_size, format_number, format_length
 import time, random, sys, json, codecs, threading, glob, re, string, os, requests, six, ast, pytz, urllib, urllib3, urllib.parse, traceback, atexit, subprocess
 
-ririn = LINE("EtKtkL176FshhP9PKaV6.7kqscP17dKQEF08Bg5AKnG.XNdQINxpbD1oN9msScvYFDrCkFFwTtDiaAH4+0uKmNg=")
-#ririn = LINE("")
-ririnMid = ririn.profile.mid
-ririnProfile = ririn.getProfile()
-ririnSettings = ririn.getSettings()
-ririnPoll = OEPoll(ririn)
+sepri = LINE("EtKtkL176FshhP9PKaV6.7kqscP17dKQEF08Bg5AKnG.XNdQINxpbD1oN9msScvYFDrCkFFwTtDiaAH4+0uKmNg=")
+#sepri = LINE("")
+sepriMid = sepri.profile.mid
+sepriProfile = sepri.getProfile()
+sepriSettings = sepri.getSettings()
+sepriPoll = OEPoll(sepri)
 botStart = time.time()
 
 print ("╔═════════════════════════\n║╔════════════════════════\n║╠❂➣ DNA BERHASIL LOGIN\n║╚════════════════════════\n╚═════════════════════════")
 
 msg_dict = {}
 
-wait = {
-    "autoAdd": True,
-    "autoJoin": True,
+settings = {
+    "autoAdd": False,
+    "autoJoin": False,
     "autoLeave": False,
     "autoRead": False,
-    "autoRespon": True,
-    "autoResponPc": True,
-    "autoJoinTicket": True,
-    "checkContact": False,
-    "checkPost": False,
+    "lang":"JP",
+    "detectMention": True,
+    "changeGroupPicture":[],
+    "Sambutan": False,
+    "Sider":{},
     "checkSticker": False,
-    "changePictureProfile": False,
-    "changeGroupPicture": [],
-    "keyCommand": "",
-    "myProfile": {
-        "displayName": "",
-        "coverId": "",
-        "pictureStatus": "",
-        "statusMessage": ""
-    },
+    "userAgent": [
+        "Mozilla/5.0 (X11; U; Linux i586; de; rv:5.0) Gecko/20100101 Firefox/5.0",
+        "Mozilla/5.0 (X11; U; Linux amd64; rv:5.0) Gecko/20100101 Firefox/5.0 (Debian)",
+        "Mozilla/5.0 (X11; U; Linux amd64; en-US; rv:5.0) Gecko/20110619 Firefox/5.0",
+        "Mozilla/5.0 (X11; Linux) Gecko Firefox/5.0",
+        "Mozilla/5.0 (X11; Linux x86_64; rv:5.0) Gecko/20100101 Firefox/5.0 FirePHP/0.5",
+        "Mozilla/5.0 (X11; Linux x86_64; rv:5.0) Gecko/20100101 Firefox/5.0 Firefox/5.0",
+        "Mozilla/5.0 (X11; Linux x86_64) Gecko Firefox/5.0",
+        "Mozilla/5.0 (X11; Linux ppc; rv:5.0) Gecko/20100101 Firefox/5.0",
+        "Mozilla/5.0 (X11; Linux AMD64) Gecko Firefox/5.0",
+        "Mozilla/5.0 (X11; FreeBSD amd64; rv:5.0) Gecko/20100101 Firefox/5.0",
+        "Mozilla/5.0 (Windows NT 6.2; WOW64; rv:5.0) Gecko/20100101 Firefox/5.0",
+        "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:5.0) Gecko/20110619 Firefox/5.0",
+        "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:5.0) Gecko/20100101 Firefox/5.0",
+        "Mozilla/5.0 (Windows NT 6.1; rv:6.0) Gecko/20100101 Firefox/5.0",
+        "Mozilla/5.0 (Windows NT 6.1.1; rv:5.0) Gecko/20100101 Firefox/5.0",
+        "Mozilla/5.0 (Windows NT 5.2; WOW64; rv:5.0) Gecko/20100101 Firefox/5.0",
+        "Mozilla/5.0 (Windows NT 5.1; U; rv:5.0) Gecko/20100101 Firefox/5.0",
+        "Mozilla/5.0 (Windows NT 5.1; rv:2.0.1) Gecko/20100101 Firefox/5.0",
+        "Mozilla/5.0 (Windows NT 5.0; WOW64; rv:5.0) Gecko/20100101 Firefox/5.0",
+        "Mozilla/5.0 (Windows NT 5.0; rv:5.0) Gecko/20100101 Firefox/5.0"
+    ],
     "mimic": {
         "copy": False,
         "status": False,
         "target": {}
-    },
-    "Protectcancel": True,
-    "Protectgr": True,
-    "Protectinvite": True,
-    "Protectjoin": False,
-    "setKey": False,
-    "sider": False,
-    "unsendMessage": True
+    }
+}
+
+read = {
+    "readPoint": {},
+    "readMember": {},
+    "readTime": {},
+    "ROM": {}
+}
+
+myProfile = {
+	"displayName": "",
+	"statusMessage": "",
+	"pictureStatus": ""
 }
 
 cctv = {
     "cyduk":{},
     "point":{},
+    "MENTION":{},
     "sidermem":{}
 }
 
-read = {
-    "ROM": {},
-    "readPoint": {},
-    "readMember": {},
-    "readTime": {}
-}
-
-list_language = {
-    "list_textToSpeech": {
-        "id": "Indonesia",
-        "af" : "Afrikaans",
-        "sq" : "Albanian",
-        "ar" : "Arabic",
-        "hy" : "Armenian",
-        "bn" : "Bengali",
-        "ca" : "Catalan",
-        "zh" : "Chinese",
-        "zh-cn" : "Chinese (Mandarin/China)",
-        "zh-tw" : "Chinese (Mandarin/Taiwan)",
-        "zh-yue" : "Chinese (Cantonese)",
-        "hr" : "Croatian",
-        "cs" : "Czech",
-        "da" : "Danish",
-        "nl" : "Dutch",
-        "en" : "English",
-        "en-au" : "English (Australia)",
-        "en-uk" : "English (United Kingdom)",
-        "en-us" : "English (United States)",
-        "eo" : "Esperanto",
-        "fi" : "Finnish",
-        "fr" : "French",
-        "de" : "German",
-        "el" : "Greek",
-        "hi" : "Hindi",
-        "hu" : "Hungarian",
-        "is" : "Icelandic",
-        "id" : "Indonesian",
-        "it" : "Italian",
-        "ja" : "Japanese",
-        "km" : "Khmer (Cambodian)",
-        "ko" : "Korean",
-        "la" : "Latin",
-        "lv" : "Latvian",
-        "mk" : "Macedonian",
-        "no" : "Norwegian",
-        "pl" : "Polish",
-        "pt" : "Portuguese",
-        "ro" : "Romanian",
-        "ru" : "Russian",
-        "sr" : "Serbian",
-        "si" : "Sinhala",
-        "sk" : "Slovak",
-        "es" : "Spanish",
-        "es-es" : "Spanish (Spain)",
-        "es-us" : "Spanish (United States)",
-        "sw" : "Swahili",
-        "sv" : "Swedish",
-        "ta" : "Tamil",
-        "th" : "Thai",
-        "tr" : "Turkish",
-        "uk" : "Ukrainian",
-        "vi" : "Vietnamese",
-        "cy" : "Welsh"
-    },
-    "list_translate": {    
-        "af": "afrikaans",
-        "sq": "albanian",
-        "am": "amharic",
-        "ar": "arabic",
-        "hy": "armenian",
-        "az": "azerbaijani",
-        "eu": "basque",
-        "be": "belarusian",
-        "bn": "bengali",
-        "bs": "bosnian",
-        "bg": "bulgarian",
-        "ca": "catalan",
-        "ceb": "cebuano",
-        "ny": "chichewa",
-        "zh-cn": "chinese (simplified)",
-        "zh-tw": "chinese (traditional)",
-        "co": "corsican",
-        "hr": "croatian",
-        "cs": "czech",
-        "da": "danish",
-        "nl": "dutch",
-        "en": "english",
-        "eo": "esperanto",
-        "et": "estonian",
-        "tl": "filipino",
-        "fi": "finnish",
-        "fr": "french",
-        "fy": "frisian",
-        "gl": "galician",
-        "ka": "georgian",
-        "de": "german",
-        "el": "greek",
-        "gu": "gujarati",
-        "ht": "haitian creole",
-        "ha": "hausa",
-        "haw": "hawaiian",
-        "iw": "hebrew",
-        "hi": "hindi",
-        "hmn": "hmong",
-        "hu": "hungarian",
-        "is": "icelandic",
-        "ig": "igbo",
-        "id": "indonesian",
-        "ga": "irish",
-        "it": "italian",
-        "ja": "japanese",
-        "jw": "javanese",
-        "kn": "kannada",
-        "kk": "kazakh",
-        "km": "khmer",
-        "ko": "korean",
-        "ku": "kurdish (kurmanji)",
-        "ky": "kyrgyz",
-        "lo": "lao",
-        "la": "latin",
-        "lv": "latvian",
-        "lt": "lithuanian",
-        "lb": "luxembourgish",
-        "mk": "macedonian",
-        "mg": "malagasy",
-        "ms": "malay",
-        "ml": "malayalam",
-        "mt": "maltese",
-        "mi": "maori",
-        "mr": "marathi",
-        "mn": "mongolian",
-        "my": "myanmar (burmese)",
-        "ne": "nepali",
-        "no": "norwegian",
-        "ps": "pashto",
-        "fa": "persian",
-        "pl": "polish",
-        "pt": "portuguese",
-        "pa": "punjabi",
-        "ro": "romanian",
-        "ru": "russian",
-        "sm": "samoan",
-        "gd": "scots gaelic",
-        "sr": "serbian",
-        "st": "sesotho",
-        "sn": "shona",
-        "sd": "sindhi",
-        "si": "sinhala",
-        "sk": "slovak",
-        "sl": "slovenian",
-        "so": "somali",
-        "es": "spanish",
-        "su": "sundanese",
-        "sw": "swahili",
-        "sv": "swedish",
-        "tg": "tajik",
-        "ta": "tamil",
-        "te": "telugu",
-        "th": "thai",
-        "tr": "turkish",
-        "uk": "ukrainian",
-        "ur": "urdu",
-        "uz": "uzbek",
-        "vi": "vietnamese",
-        "cy": "welsh",
-        "xh": "xhosa",
-        "yi": "yiddish",
-        "yo": "yoruba",
-        "zu": "zulu",
-        "fil": "Filipino",
-        "he": "Hebrew"
-    }
-}
-
-try:
-    with open("Log_data.json","r",encoding="utf_8_sig") as f:
-        msg_dict = json.loads(f.read())
-except:
-    print("Couldn't read Log data")
-    
-wait["myProfile"]["displayName"] = ririnProfile.displayName
-wait["myProfile"]["statusMessage"] = ririnProfile.statusMessage
-wait["myProfile"]["pictureStatus"] = ririnProfile.pictureStatus
-coverId = ririn.getProfileDetail()["result"]["objectId"]
-wait["myProfile"]["coverId"] = coverId
-
+myProfile["displayName"] = lineProfile.displayName
+myProfile["statusMessage"] = lineProfile.statusMessage
+myProfile["pictureStatus"] = lineProfile.pictureStatus
+#==============================================================================#
 def restartBot():
-    print ("[ INFO ] BOT RESTART")
+    print ("[ INFO ] BOT RESETTED")
+    time.sleep(3)
     python = sys.executable
     os.execl(python, python, *sys.argv)
     
 def logError(text):
-    ririn.log("[ ERROR ] {}".format(str(text)))
-    tz = pytz.timezone("Asia/Jakarta")
-    timeNow = datetime.now(tz=tz)
-    timeHours = datetime.strftime(timeNow,"(%H:%M)")
-    day = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday","Friday", "Saturday"]
-    hari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"]
-    bulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"]
-    inihari = datetime.now(tz=tz)
-    hr = inihari.strftime('%A')
-    bln = inihari.strftime('%m')
-    for i in range(len(day)):
-        if hr == day[i]: hasil = hari[i]
-    for k in range(0, len(bulan)):
-        if bln == str(k): bln = bulan[k-1]
-    time = "{}, {} - {} - {} | {}".format(str(hasil), str(inihari.strftime('%d')), str(bln), str(inihari.strftime('%Y')), str(inihari.strftime('%H:%M:%S')))
-    with open("logError.txt","a") as error:
-        error.write("\n[ {} ] {}".format(str(time), text))
+    line.log("[ ERROR ] " + str(text))
+    time_ = datetime.now()
+    with open("errorLog.txt","a") as error:
+        error.write("\n[%s] %s" % (str(time), text))
+        
+def sendMention(to, mid, firstmessage, lastmessage):
+    try:
+        arrData = ""
+        text = "%s " %(str(firstmessage))
+        arr = []
+        mention = "@x "
+        slen = str(len(text))
+        elen = str(len(text) + len(mention) - 1)
+        arrData = {'S':slen, 'E':elen, 'M':mid}
+        arr.append(arrData)
+        text += mention + str(lastmessage)
+        line.sendMessage(to, text, {'MENTION': str('{"MENTIONEES":' + json.dumps(arr) + '}')}, 0)
+    except Exception as error:
+        logError(error)
+        line.sendMessage(to, "[ INFO ] Error :\n" + str(error))
 
-def cTime_to_datetime(unixtime):
-    return datetime.fromtimestamp(int(str(unixtime)[:len(str(unixtime))-3]))
-def dt_to_str(dt):
-    return dt.strftime('%H:%M:%S')
+def sendMessage(to, Message, contentMetadata={}, contentType=0):
+    mes = Message()
+    mes.to, mes._from = to, profile.mid
+    mes.text = text
+    mes.contentType, mes.contentMetadata = contentType, contentMetadata
+    if to not in messageReq:
+        messageReq[to] = -1
+    messageReq[to] += 1
 
-def delete_log():
-    ndt = datetime.now()
-    for data in msg_dict:
-        if (datetime.utcnow() - cTime_to_datetime(msg_dict[data]["createdTime"])) > timedelta(1):
-            if "path" in msg_dict[data]:
-                ririn.deleteFile(msg_dict[data]["path"])
-            del msg_dict[data]
-            
-def sendMention(to, text="", mids=[]):
-    arrData = ""
-    arr = []
-    mention = "@dee "
-    if mids == []:
-        raise Exception("Invalid mids")
-    if "@!" in text:
-        if text.count("@!") != len(mids):
-            raise Exception("Invalid mids")
-        texts = text.split("@!")
-        textx = ""
-        for mid in mids:
-            textx += str(texts[mids.index(mid)])
-            slen = len(textx)
-            elen = len(textx) + 15
-            arrData = {'S':str(slen), 'E':str(elen - 4), 'M':mid}
+def sendMessageWithMention(to, mid):
+    try:
+        aa = '{"S":"0","E":"3","M":'+json.dumps(mid)+'}'
+        text_ = '@x '
+        line.sendMessage(to, text_, contentMetadata={'MENTION':'{"MENTIONEES":['+aa+']}'}, contentType=0)
+    except Exception as error:
+        logError(error)
+
+        
+def mentionMembers(to, mid):
+    try:
+        arrData = ""
+        textx = "╔══[Mention {} User]\n╠ ".format(str(len(mid)))
+        arr = []
+        no = 1
+        for i in mid:
+            mention = "@x\n"
+            slen = str(len(textx))
+            elen = str(len(textx) + len(mention) - 1)
+            arrData = {'S':slen, 'E':elen, 'M':i}
             arr.append(arrData)
             textx += mention
-        textx += str(texts[len(mids)])
-    else:
-        textx = ""
-        slen = len(textx)
-        elen = len(textx) + 15
-        arrData = {'S':str(slen), 'E':str(elen - 4), 'M':mids[0]}
-        arr.append(arrData)
-        textx += mention + str(text)
-    ririn.sendMessage(to, textx, {'MENTION': str('{"MENTIONEES":' + json.dumps(arr) + '}')}, 0)
+            if no < len(mid):
+                no += 1
+                textx += "╠ "
+            else:
+                try:
+                    textx += "╚══[ {} ]".format(str(line.getGroup(to).name))
+                except:
+                    pass
+        line.sendMessage(to, textx, {'MENTION': str('{"MENTIONEES":' + json.dumps(arr) + '}')}, 0)
+    except Exception as error:
+        logError(error)
+        line.sendMessage(to, "[ INFO ] Error :\n" + str(error))
 
-def command(text):
-    pesan = text.lower()
-    if wait["setKey"] == True:
-        if pesan.startswith(wait["keyCommand"]):
-            cmd = pesan.replace(wait["keyCommand"],"")
-        else:
-            cmd = "Undefined command"
-    else:
-        cmd = text.lower()
-    return cmd
-    
+def backupData():
+    try:
+        backup = settings
+        f = codecs.open('temp.json','w','utf-8')
+        json.dump(backup, f, sort_keys=True, indent=4, ensure_ascii=False)
+        backup = read
+        f = codecs.open('read.json','w','utf-8')
+        json.dump(backup, f, sort_keys=True, indent=4, ensure_ascii=False)
+        return True
+    except Exception as error:
+        logError(error)
+        return False 
+        
 def helpmessage():
-    if wait['setKey'] == True:
-        key = wait['keyCommand']
+    if settings['setKey'] == True:
+        key = settings['keyCommand']
     else:
         key = ''
     helpMessage =   "╔════════════════════╗" + "\n" + \
-                    "                    ✰ ᴅɴᴀ ʙᴏᴛ ✰" + "\n" + \
+                    "                    ✰ SepriBot✰" + "\n" + \
                     "╚════════════════════╝" + "\n" + \
                     "╔════════════════════╗" + "\n" + \
                     "                ◄]·✪·Public·✪·[►" + "\n" + \
@@ -415,17 +262,17 @@ def helpmessage():
                     "               ᴄʀᴇᴅɪᴛs ʙʏ : ©ᴅ̶ᴇ̶ᴇ̶ ✯" + "\n" + \
                     "╚════════════════════╝" + "\n" + \
                     "╔════════════════════╗" + "\n" + \
-                    "                   ✰ ᴅɴᴀ ʙᴏᴛ  ✰" + "\n" + \
+                    "                   ✰ SepriBot ✰" + "\n" + \
                     "╚════════════════════╝"
     return helpMessage
 
 def helptexttospeech():
-    if wait['setKey'] == True:
-        key = wait['keyCommand']
+    if settings['setKey'] == True:
+        key = settings['keyCommand']
     else:
         key = ''
     helpTextToSpeech =  "╔════════════════════╗" + "\n" + \
-                        "                    ✰ ᴅɴᴀ ʙᴏᴛ ✰" + "\n" + \
+                        "                    ✰ SepriBot✰" + "\n" + \
                         "╚════════════════════╝" + "\n" + \
                         "╔════════════════════╗" + "\n" + \
                         "          ◄]·✪·ᴛᴇxᴛᴛᴏsᴘᴇᴇᴄʜ·✪·[►" + "\n" + \
@@ -485,18 +332,18 @@ def helptexttospeech():
                         "               ᴄʀᴇᴅɪᴛs ʙʏ : ©ᴅ̶ᴇ̶ᴇ̶ ✯" + "\n" + \
                         "╚════════════════════╝" + "\n" + \
                         "╔════════════════════╗" + "\n" + \
-                        "                    ✰ ᴅɴᴀ ʙᴏᴛ ✰" + "\n" + \
+                        "                    ✰ SepriBot✰" + "\n" + \
                         "╚════════════════════╝" + "\n" + \
                         "ᴄᴏɴᴛᴏʜ : " + key + "sᴀʏ-ɪᴅ ʀɪʀɪɴ"
     return helpTextToSpeech
 
 def helptranslate():
-    if wait['setKey'] == True:
-        key = wait['keyCommand']
+    if settings['setKey'] == True:
+        key = settings['keyCommand']
     else:
         key = ''
     helpTranslate = "╔════════════════════╗" + "\n" + \
-                        "                     ✰ ᴅɴᴀ ʙᴏᴛ ✰" + "\n" + \
+                        "                     ✰ SepriBot✰" + "\n" + \
                         "╚════════════════════╝" + "\n" + \
                         "╔════════════════════╗" + "\n" + \
                         "             ◄]·✪·ᴛʀᴀɴsʟᴀᴛᴇ·✪·[►" + "\n" + \
@@ -611,12 +458,12 @@ def helptranslate():
                         "              ᴄʀᴇᴅɪᴛs ʙʏ : ©ᴅ̶ᴇ̶ᴇ̶ ✯" + "\n" + \
                         "╚════════════════════╝" + "\n" + \
                         "╔════════════════════╗" + "\n" + \
-                        "                    ✰ ᴅɴᴀ ʙᴏᴛ ✰" + "\n" + \
+                        "                    ✰ SepriBot✰" + "\n" + \
                         "╚════════════════════╝" + "\n" + \
                         "ᴄᴏɴᴛᴏʜ : " + key + "ᴛʀ-ɪᴅ ʀɪʀɪɴ"
     return helpTranslate
 
-def ririnBot(op):
+def sepriBot(op):
     try:
         if op.type == 0:
             print ("[ 0 ] Succes")
@@ -624,40 +471,40 @@ def ririnBot(op):
 
         if op.type == 5:
             print ("[ 5 ] Add Contact")
-            if wait["autoAdd"] == True:
-                ririn.findAndAddContactsByMid(op.param1)
-            ririn.sendMessage(to, "Halo, ᴛʜᴀɴᴋs ғᴏʀ ᴀᴅᴅ ᴍᴇ \nᴅɴᴀ ʙᴏᴛ \nᴏᴘᴇɴ ᴏʀᴅᴇʀ sᴇʟғʙᴏᴛ ᴏɴʟʏ\nsᴇʟғʙᴏᴛ + ᴀssɪsᴛ\nʙᴏᴛ ᴘʀᴏᴛᴇᴄᴛ\nᴀʟʟ ʙᴏᴛ ᴘʏᴛʜᴏɴ з \nᴍɪɴᴀᴛ ᴘᴄ ᴀᴋᴜɴ ᴅɪ ʙᴀᴡᴀʜ \nᴄʀᴇᴀᴛᴏʀ line.me/ti/p/ppgIZ0JLDW")
+            if settings["autoAdd"] == True:
+                sepri.findAndAddContactsByMid(op.param1)
+            sepri.sendMessage(to, "Halo, ᴛʜᴀɴᴋs ғᴏʀ ᴀᴅᴅ ᴍᴇ \nSepriBot\nᴏᴘᴇɴ ᴏʀᴅᴇʀ sᴇʟғʙᴏᴛ ᴏɴʟʏ\nsᴇʟғʙᴏᴛ + ᴀssɪsᴛ\nʙᴏᴛ ᴘʀᴏᴛᴇᴄᴛ\nᴀʟʟ ʙᴏᴛ ᴘʏᴛʜᴏɴ з \nᴍɪɴᴀᴛ ᴘᴄ ᴀᴋᴜɴ ᴅɪ ʙᴀᴡᴀʜ \nᴄʀᴇᴀᴛᴏʀ line.me/ti/p/ppgIZ0JLDW")
 
         if op.type == 13:
             print ("[ 13 ] Invite Into Group")
-            if ririnMid in op.param3:
-                if wait["autoJoin"] == True:
-                    ririn.acceptGroupInvitation(op.param1)
-                dan = ririn.getContact(op.param2)
-                tgb = ririn.getGroup(op.param1)
-                ririn.sendMessage(op.param1, "ʜᴀʟᴏ, ᴛʜx ғᴏʀ ɪɴᴠɪᴛᴇ ᴍᴇ")
-                ririn.sendContact(op.param1, op.param2)
-                ririn.sendImageWithURL(op.param1, "http://dl.profile.line-cdn.net{}".format(dan.picturePath))
+            if sepriMid in op.param3:
+                if settings["autoJoin"] == True:
+                    sepri.acceptGroupInvitation(op.param1)
+                dan = sepri.getContact(op.param2)
+                tgb = sepri.getGroup(op.param1)
+                sepri.sendMessage(op.param1, "ʜᴀʟᴏ, ᴛʜx ғᴏʀ ɪɴᴠɪᴛᴇ ᴍᴇ")
+                sepri.sendContact(op.param1, op.param2)
+                sepri.sendImageWithURL(op.param1, "http://dl.profile.line-cdn.net{}".format(dan.picturePath))
                 
         if op.type == 15:
-        	dan = ririn.getContact(op.param2)
-        	tgb = ririn.getGroup(op.param1)
-        	ririn.sendMessage(op.param1, "ɴᴀʜ ᴋᴀɴ ʙᴀᴘᴇʀ 「{}」, ɢᴀᴋ ᴜsᴀʜ ʙᴀʟɪᴋ ᴅɪ {} ʟᴀɢɪ ʏᴀ\nsᴇʟᴀᴍᴀᴛ ᴊᴀʟᴀɴ ᴅᴀɴ sᴇᴍᴏɢᴀʜ ᴛᴇɴᴀɴɢ ᴅɪʟᴜᴀʀ sᴀɴᴀ 😘😘😘".format(str(dan.displayName),str(tgb.name)))
-        	ririn.sendContact(op.param1, op.param2)
-        	ririn.sendImageWithURL(op.param1, "http://dl.profile.line-cdn.net{}".format(dan.picturePath))
+        	dan = sepri.getContact(op.param2)
+        	tgb = sepri.getGroup(op.param1)
+        	sepri.sendMessage(op.param1, "ɴᴀʜ ᴋᴀɴ ʙᴀᴘᴇʀ 「{}」, ɢᴀᴋ ᴜsᴀʜ ʙᴀʟɪᴋ ᴅɪ {} ʟᴀɢɪ ʏᴀ\nsᴇʟᴀᴍᴀᴛ ᴊᴀʟᴀɴ ᴅᴀɴ sᴇᴍᴏɢᴀʜ ᴛᴇɴᴀɴɢ ᴅɪʟᴜᴀʀ sᴀɴᴀ 😘😘😘".format(str(dan.displayName),str(tgb.name)))
+        	sepri.sendContact(op.param1, op.param2)
+        	sepri.sendImageWithURL(op.param1, "http://dl.profile.line-cdn.net{}".format(dan.picturePath))
         	
         if op.type == 17:
-        	dan = ririn.getContact(op.param2)
-        	tgb = ririn.getGroup(op.param1)
+        	dan = sepri.getContact(op.param2)
+        	tgb = sepri.getGroup(op.param1)
         	sendMention(op.param1, "ʜᴏʟᴀ @!         ,\nᴡᴇʟᴄᴏᴍᴇ ᴛᴏ ɢʀᴏᴜᴘ {} \nᴊᴀɴɢᴀɴ ʟᴜᴘᴀ ᴄʜᴇᴄᴋ ɴᴏᴛᴇ ʏᴀ \nᴀᴡᴀs ᴋᴀʟᴀᴜ ʙᴀᴘᴇʀᴀɴ 😘😘😘".format(str(tgb.name)),[op.param2])
-        	ririn.sendContact(op.param1, op.param2)
-        	ririn.sendImageWithURL(op.param1, "http://dl.profile.line-cdn.net{}".format(dan.picturePath))
+        	sepri.sendContact(op.param1, op.param2)
+        	sepri.sendImageWithURL(op.param1, "http://dl.profile.line-cdn.net{}".format(dan.picturePath))
 
         if op.type in [22, 24]:
             print ("[ 22 And 24 ] NOTIFIED INVITE INTO ROOM & NOTIFIED LEAVE ROOM")
-            if wait["autoLeave"] == True:
+            if settings["autoLeave"] == True:
                 sendMention(op.param1, "ᴡᴏʏ ᴋɴᴛʟᴏ @!         ,\nɴɢᴀᴘᴀɪɴ ɪɴᴠɪᴛᴇ ɢᴡ")
-                ririn.leaveRoom(op.param1)
+                sepri.leaveRoom(op.param1)
 
         if op.type == 25:
             try:
@@ -667,12 +514,12 @@ def ririnBot(op):
                 msg_id = msg.id
                 receiver = msg.to
                 sender = msg._from
-                setKey = wait["keyCommand"].title()
-                if wait["setKey"] == False:
+                setKey = settings["keyCommand"].title()
+                if settings["setKey"] == False:
                     setKey = ''
                 if msg.toType == 0 or msg.toType == 1 or msg.toType == 2:
                     if msg.toType == 0:
-                        if sender != ririn.profile.mid:
+                        if sender != sepri.profile.mid:
                             to = sender
                         else:
                             to = receiver
@@ -687,191 +534,191 @@ def ririnBot(op):
                             cmd = command(text)
                             if cmd == "help":
                                 helpMessage = helpmessage()
-                                ririn.sendMessage(to, str(helpMessage))
+                                sepri.sendMessage(to, str(helpMessage))
                             elif cmd == "tts":
                                 helpTextToSpeech = helptexttospeech()
-                                ririn.sendMessage(to, str(helpTextToSpeech))
+                                sepri.sendMessage(to, str(helpTextToSpeech))
                             elif cmd == "translate":
                                 helpTranslate = helptranslate()
-                                ririn.sendMessage(to, str(helpTranslate))
+                                sepri.sendMessage(to, str(helpTranslate))
                             elif cmd.startswith("changekey:"):
                                 sep = text.split(" ")
                                 key = text.replace(sep[0] + " ","")
                                 if " " in key:
-                                    ririn.sendMessage(to, "ᴅᴏɴ'ᴛ ᴛʏᴘᴏ ʙʀᴏ")
+                                    sepri.sendMessage(to, "ᴅᴏɴ'ᴛ ᴛʏᴘᴏ ʙʀᴏ")
                                 else:
-                                    wait["keyCommand"] = str(key).lower()
-                                    ririn.sendMessage(to, "sᴜᴄᴄᴇs ᴄʜᴀɴɢᴇ ᴋᴇʏ [ {} ]".format(str(key).lower()))
+                                    settings["keyCommand"] = str(key).lower()
+                                    sepri.sendMessage(to, "sᴜᴄᴄᴇs ᴄʜᴀɴɢᴇ ᴋᴇʏ [ {} ]".format(str(key).lower()))
                             elif cmd == "sp":
-                            	ririn.sendMessage(to, "❂➣ ʟᴏᴀᴅɪɴɢ...")
+                            	sepri.sendMessage(to, "❂➣ ʟᴏᴀᴅɪɴɢ...")
                             	sp = int(round(time.time() *1000))
-                            	ririn.sendMessage(to,"ᴍʏ sᴘᴇᴇᴅ : %sms" % (sp - op.createdTime))
+                            	sepri.sendMessage(to,"ᴍʏ sᴘᴇᴇᴅ : %sms" % (sp - op.createdTime))
                             elif cmd == "speed":
                             	start = time.time()
-                            	ririn.sendMessage(to, "❂➣ ʟᴏᴀᴅɪɴɢ...")
+                            	sepri.sendMessage(to, "❂➣ ʟᴏᴀᴅɪɴɢ...")
                             	elapsed_time = time.time() - start
-                            	ririn.sendMessage(to, "ᴍʏ sᴘᴇᴇᴅ : %sms" % (elapsed_time))
+                            	sepri.sendMessage(to, "ᴍʏ sᴘᴇᴇᴅ : %sms" % (elapsed_time))
                             elif cmd == "runtime":
                                 timeNow = time.time()
                                 runtime = timeNow - botStart
                                 runtime = format_timespan(runtime)
-                                ririn.sendMessage(to, "ʀᴜɴɴɪɴɢ ɪɴ.. {}".format(str(runtime)))
+                                sepri.sendMessage(to, "ʀᴜɴɴɪɴɢ ɪɴ.. {}".format(str(runtime)))
                             elif cmd == "restart":
-                                ririn.sendMessage(to, "ʙᴏᴛ ʜᴀᴠᴇ ʙᴇᴇɴ ʀᴇsᴛᴀʀᴛ")
+                                sepri.sendMessage(to, "ʙᴏᴛ ʜᴀᴠᴇ ʙᴇᴇɴ ʀᴇsᴛᴀʀᴛ")
                                 restartBot()
 # Pembatas Script #
                             elif cmd == "autoadd on":
-                                wait["autoAdd"] = True
-                                ririn.sendMessage(to, "ᴀᴜᴛᴏ ᴀᴅᴅ ᴏɴ")
+                                settings["autoAdd"] = True
+                                sepri.sendMessage(to, "ᴀᴜᴛᴏ ᴀᴅᴅ ᴏɴ")
                             elif cmd == "autoadd off":
-                                wait["autoAdd"] = False
-                                ririn.sendMessage(to, "ᴀᴜᴛᴏ ᴀᴅᴅ ᴏғғ")
+                                settings["autoAdd"] = False
+                                sepri.sendMessage(to, "ᴀᴜᴛᴏ ᴀᴅᴅ ᴏғғ")
                             elif cmd == "autojoin on":
-                                wait["autoJoin"] = True
-                                ririn.sendMessage(to, "ᴀᴜᴛᴏ ᴊᴏɪɴ ᴏɴ")
+                                settings["autoJoin"] = True
+                                sepri.sendMessage(to, "ᴀᴜᴛᴏ ᴊᴏɪɴ ᴏɴ")
                             elif cmd == "autojoin off":
-                                wait["autoJoin"] = False
-                                ririn.sendMessage(to, "ᴀᴜᴛᴏ ᴊᴏɪɴ ᴏɴ ᴏғғ")
+                                settings["autoJoin"] = False
+                                sepri.sendMessage(to, "ᴀᴜᴛᴏ ᴊᴏɪɴ ᴏɴ ᴏғғ")
                             elif cmd == "autoleave on":
-                                wait["autoLeave"] = True
-                                ririn.sendMessage(to, "ᴀᴜᴛᴏ ʟᴇᴀᴠᴇ ᴏɴ")
+                                settings["autoLeave"] = True
+                                sepri.sendMessage(to, "ᴀᴜᴛᴏ ʟᴇᴀᴠᴇ ᴏɴ")
                             elif cmd == "autoleave off":
-                                wait["autoLeave"] = False
-                                ririn.sendMessage(to, "ᴀᴜᴛᴏ ʟᴇᴀᴠᴇ ᴏғғ")
-                            elif cmd == "autoresponpc on":
-                                wait["autoResponPc"] = True
-                                ririn.sendMessage(to, "ᴀᴜᴛᴏ ʀᴇsᴘᴏɴ ғᴏʀ ᴘᴇʀsᴏɴᴀʟ ᴄʜᴀᴛ ᴏɴ")
-                            elif cmd == "autoresponpc off":
-                                wait["autoResponPc"] = False
-                                ririn.sendMessage(to, "ᴀᴜᴛᴏ ʀᴇsᴘᴏɴ ғᴏʀ ᴘᴇʀsᴏɴᴀʟ ᴄʜᴀᴛ ᴏғғ")
-                            elif cmd == "autorespon on":
-                                wait["autoRespon"] = True
-                                ririn.sendMessage(to, "ᴀᴜᴛᴏ ʀᴇsᴘᴏɴ ᴏɴ")
-                            elif cmd == "autorespon off":
-                                wait["autoRespon"] = False
-                                ririn.sendMessage(to, "ᴀᴜᴛᴏ ʀᴇsᴘᴏɴ ᴏғғ")
+                                settings["autoLeave"] = False
+                                sepri.sendMessage(to, "ᴀᴜᴛᴏ ʟᴇᴀᴠᴇ ᴏғғ")
+                            elif cmd == "detectMentionpc on":
+                                settings["detectMentionPc"] = True
+                                sepri.sendMessage(to, "ᴀᴜᴛᴏ ʀᴇsᴘᴏɴ ғᴏʀ ᴘᴇʀsᴏɴᴀʟ ᴄʜᴀᴛ ᴏɴ")
+                            elif cmd == "detectMentionpc off":
+                                settings["detectMentionPc"] = False
+                                sepri.sendMessage(to, "ᴀᴜᴛᴏ ʀᴇsᴘᴏɴ ғᴏʀ ᴘᴇʀsᴏɴᴀʟ ᴄʜᴀᴛ ᴏғғ")
+                            elif cmd == "detectMention on":
+                                settings["detectMention"] = True
+                                sepri.sendMessage(to, "ᴀᴜᴛᴏ ʀᴇsᴘᴏɴ ᴏɴ")
+                            elif cmd == "detectMention off":
+                                settings["detectMention"] = False
+                                sepri.sendMessage(to, "ᴀᴜᴛᴏ ʀᴇsᴘᴏɴ ᴏғғ")
                             elif cmd == "autoread on":
-                                wait["autoRead"] = True
-                                ririn.sendMessage(to, "ᴀᴜᴛᴏ ʀᴇᴀᴅ ᴏɴ")
+                                settings["autoRead"] = True
+                                sepri.sendMessage(to, "ᴀᴜᴛᴏ ʀᴇᴀᴅ ᴏɴ")
                             elif cmd == "autoread off":
-                                wait["autoRead"] = False
-                                ririn.sendMessage(to, "ᴀᴜᴛᴏ ʀᴇᴀᴅ ᴏғғ")
+                                settings["autoRead"] = False
+                                sepri.sendMessage(to, "ᴀᴜᴛᴏ ʀᴇᴀᴅ ᴏғғ")
                             elif cmd == "autojointicket on":
-                                wait["autoJoinTicket"] = True
-                                ririn.sendMessage(to, "ᴊᴏɪɴ ʙʏ ᴛɪᴄᴋᴇᴛ ᴏɴ")
+                                settings["autoJoinTicket"] = True
+                                sepri.sendMessage(to, "ᴊᴏɪɴ ʙʏ ᴛɪᴄᴋᴇᴛ ᴏɴ")
                             elif cmd == "autoJoinTicket off":
-                                wait["autoJoin"] = False
-                                ririn.sendMessage(to, "ᴊᴏɪɴ ʙʏ ᴛɪᴄᴋᴇᴛ ᴏғғ")
+                                settings["autoJoin"] = False
+                                sepri.sendMessage(to, "ᴊᴏɪɴ ʙʏ ᴛɪᴄᴋᴇᴛ ᴏғғ")
                             elif cmd == "checkcontact on":
-                                wait["checkContact"] = True
-                                ririn.sendMessage(to, "ᴄʜᴇᴄᴋ ᴄᴏɴᴛᴀᴄᴛ ᴏɴ")
+                                settings["checkContact"] = True
+                                sepri.sendMessage(to, "ᴄʜᴇᴄᴋ ᴄᴏɴᴛᴀᴄᴛ ᴏɴ")
                             elif cmd == "checkcontact off":
-                                wait["checkContact"] = False
-                                ririn.sendMessage(to, "ᴄʜᴇᴄᴋ ᴄᴏɴᴛᴀᴄᴛ ᴏғғ")
+                                settings["checkContact"] = False
+                                sepri.sendMessage(to, "ᴄʜᴇᴄᴋ ᴄᴏɴᴛᴀᴄᴛ ᴏғғ")
                             elif cmd == "checkpost on":
-                                wait["checkPost"] = True
-                                ririn.sendMessage(to, "ᴄʜᴇᴄᴋ ᴘᴏsᴛ ᴏɴ")
+                                settings["checkPost"] = True
+                                sepri.sendMessage(to, "ᴄʜᴇᴄᴋ ᴘᴏsᴛ ᴏɴ")
                             elif cmd == "checkpost off":
-                                wait["checkPost"] = False
-                                ririn.sendMessage(to, "ᴄʜᴇᴄᴋ ᴘᴏsᴛ ᴏғғ")
+                                settings["checkPost"] = False
+                                sepri.sendMessage(to, "ᴄʜᴇᴄᴋ ᴘᴏsᴛ ᴏғғ")
                             elif cmd == "checksticker on":
-                                wait["checkSticker"] = True
-                                ririn.sendMessage(to, "ᴄʜᴇᴄᴋ sᴛɪᴄᴋᴇʀ ᴏɴ")
+                                settings["checkSticker"] = True
+                                sepri.sendMessage(to, "ᴄʜᴇᴄᴋ sᴛɪᴄᴋᴇʀ ᴏɴ")
                             elif cmd == "checksticker off":
-                                wait["checkSticker"] = False
-                                ririn.sendMessage(to, "ᴄʜᴇᴄᴋ sᴛɪᴄᴋᴇʀ ᴏғғ")
+                                settings["checkSticker"] = False
+                                sepri.sendMessage(to, "ᴄʜᴇᴄᴋ sᴛɪᴄᴋᴇʀ ᴏғғ")
                             elif cmd == "unsendchat on":
-                                wait["unsendMessage"] = True
-                                ririn.sendMessage(to, "ᴜɴsᴇɴᴅ ᴍᴇssᴀɢᴇ ᴏɴ")
+                                settings["unsendMessage"] = True
+                                sepri.sendMessage(to, "ᴜɴsᴇɴᴅ ᴍᴇssᴀɢᴇ ᴏɴ")
                             elif cmd == "unsendchat off":
-                                wait["unsendMessage"] = False
-                                ririn.sendMessage(to, "ᴜɴsᴇɴᴅ ᴍᴇssᴀɢᴇ ᴏғғ")
+                                settings["unsendMessage"] = False
+                                sepri.sendMessage(to, "ᴜɴsᴇɴᴅ ᴍᴇssᴀɢᴇ ᴏғғ")
                             elif cmd == "status":
                                 try:
                                     ret_ = "╔═════[ ·✪·sᴛᴀᴛᴜs·✪· ]═════╗"
-                                    if wait["autoAdd"] == True: ret_ += "\n╠❂➣ [ ᴏɴ ] ᴀᴜᴛᴏ ᴀᴅᴅ 「⚪」"
+                                    if settings["autoAdd"] == True: ret_ += "\n╠❂➣ [ ᴏɴ ] ᴀᴜᴛᴏ ᴀᴅᴅ 「⚪」"
                                     else: ret_ += "\n╠❂➣ [ ᴏғғ ] ᴀᴜᴛᴏ ᴀᴅᴅ 「⚫」"
-                                    if wait["autoJoin"] == True: ret_ += "\n╠❂➣ [ ᴏɴ ] ᴀᴜᴛᴏ ᴊᴏɪɴ 「⚪」"
+                                    if settings["autoJoin"] == True: ret_ += "\n╠❂➣ [ ᴏɴ ] ᴀᴜᴛᴏ ᴊᴏɪɴ 「⚪」"
                                     else: ret_ += "\n╠❂➣ [ ᴏғғ ] ᴀᴜᴛᴏ ᴊᴏɪɴ 「⚫」"
-                                    if wait["autoLeave"] == True: ret_ += "\n╠❂➣ [ ᴏɴ ] ᴀᴜᴛᴏ ʟᴇᴀᴠᴇ 「⚪」"
+                                    if settings["autoLeave"] == True: ret_ += "\n╠❂➣ [ ᴏɴ ] ᴀᴜᴛᴏ ʟᴇᴀᴠᴇ 「⚪」"
                                     else: ret_ += "\n╠❂➣ [ ᴏғғ ] ᴀᴜᴛᴏ ʟᴇᴀᴠᴇ 「⚫」"
-                                    if wait["autoJoinTicket"] == True: ret_ += "\n╠❂➣ [ ᴏɴ ] ᴊᴏɪɴ ᴛɪᴄᴋᴇᴛ 「⚪」"
+                                    if settings["autoJoinTicket"] == True: ret_ += "\n╠❂➣ [ ᴏɴ ] ᴊᴏɪɴ ᴛɪᴄᴋᴇᴛ 「⚪」"
                                     else: ret_ += "\n╠❂➣ [ ᴏғғ ] ᴊᴏɪɴ ᴛɪᴄᴋᴇᴛ 「⚫」"
-                                    if wait["autoRead"] == True: ret_ += "\n╠❂➣ [ ᴏɴ ] ᴀᴜᴛᴏ ʀᴇᴀᴅ 「⚪」"
+                                    if settings["autoRead"] == True: ret_ += "\n╠❂➣ [ ᴏɴ ] ᴀᴜᴛᴏ ʀᴇᴀᴅ 「⚪」"
                                     else: ret_ += "\n╠❂➣ [ ᴏғғ ] ᴀᴜᴛᴏ ʀᴇᴀᴅ 「⚫」"
-                                    if wait["autoRespon"] == True: ret_ += "\n╠❂➣ [ ᴏɴ ] ᴀᴜᴛᴏ ʀᴇsᴘᴏɴ 「⚪」"
+                                    if settings["detectMention"] == True: ret_ += "\n╠❂➣ [ ᴏɴ ] ᴀᴜᴛᴏ ʀᴇsᴘᴏɴ 「⚪」"
                                     else: ret_ += "\n╠❂➣ [ ᴏғғ ] ᴀᴜᴛᴏ ʀᴇsᴘᴏɴ 「⚫」"
-                                    if wait["autoResponPc"] == True: ret_ += "\n╠❂➣ [ ᴏɴ ] ᴀᴜᴛᴏ ʀᴇsᴘᴏɴ ᴘᴄ 「⚪」"
+                                    if settings["detectMentionPc"] == True: ret_ += "\n╠❂➣ [ ᴏɴ ] ᴀᴜᴛᴏ ʀᴇsᴘᴏɴ ᴘᴄ 「⚪」"
                                     else: ret_ += "\n╠❂➣ [ ᴏғғ ] ᴀᴜᴛᴏ ʀᴇsᴘᴏɴ ᴘᴄ 「⚫」"
-                                    if wait["checkContact"] == True: ret_ += "\n╠❂➣ [ ᴏɴ ] ᴄʜᴇᴄᴋ ᴄᴏɴᴛᴀᴄᴛ 「⚪」"
+                                    if settings["checkContact"] == True: ret_ += "\n╠❂➣ [ ᴏɴ ] ᴄʜᴇᴄᴋ ᴄᴏɴᴛᴀᴄᴛ 「⚪」"
                                     else: ret_ += "\n╠❂➣ [ ᴏғғ ] ᴄʜᴇᴄᴋ ᴄᴏɴᴛᴀᴄᴛ 「⚫」"
-                                    if wait["checkPost"] == True: ret_ += "\n╠❂➣ [ ᴏɴ ] ᴄʜᴇᴄᴋ ᴘᴏsᴛ 「⚪」"
+                                    if settings["checkPost"] == True: ret_ += "\n╠❂➣ [ ᴏɴ ] ᴄʜᴇᴄᴋ ᴘᴏsᴛ 「⚪」"
                                     else: ret_ += "\n╠❂➣ [ ᴏғғ ] ᴄʜᴇᴄᴋ ᴘᴏsᴛ 「⚫」"
-                                    if wait["checkSticker"] == True: ret_ += "\n╠❂➣ [ ᴏɴ ] ᴄʜᴇᴄᴋ sᴛɪᴄᴋᴇʀ 「⚪」"
+                                    if settings["checkSticker"] == True: ret_ += "\n╠❂➣ [ ᴏɴ ] ᴄʜᴇᴄᴋ sᴛɪᴄᴋᴇʀ 「⚪」"
                                     else: ret_ += "\n╠❂➣ [ ᴏғғ ] ᴄʜᴇᴄᴋ sᴛɪᴄᴋᴇʀ 「⚫」"
-                                    if wait["setKey"] == True: ret_ += "\n╠❂➣ [ ᴏɴ ] sᴇᴛ ᴋᴇʏ 「⚪」"
+                                    if settings["setKey"] == True: ret_ += "\n╠❂➣ [ ᴏɴ ] sᴇᴛ ᴋᴇʏ 「⚪」"
                                     else: ret_ += "\n╠❂➣ [ ᴏғғ ] sᴇᴛ ᴋᴇʏ 「⚫」"
-                                    if wait["unsendMessage"] == True: ret_ += "\n╠❂➣ [ ᴏɴ ] ᴜɴsᴇɴᴅ ᴍsɢ 「⚪」"
+                                    if settings["unsendMessage"] == True: ret_ += "\n╠❂➣ [ ᴏɴ ] ᴜɴsᴇɴᴅ ᴍsɢ 「⚪」"
                                     else: ret_ += "\n╠❂➣ [ ᴏғғ ] ᴜɴsᴇɴᴅ ᴍsɢ 「⚫」"
-                                    ret_ += "\n╚═════[ ✯ ᴅɴᴀ ʙᴏᴛ ✯ ]═════╝"
-                                    ririn.sendMessage(to, str(ret_))
+                                    ret_ += "\n╚═════[ ✯ SepriBot✯ ]═════╝"
+                                    sepri.sendMessage(to, str(ret_))
                                 except Exception as e:
-                                    ririn.sendMessage(msg.to, str(e))
+                                    sepri.sendMessage(msg.to, str(e))
                             elif cmd == "set":
                                 try:
                                     ret_ = "╔═════[ ·✪·  s ᴇ ᴛ  ·✪· ]═════╗"
-                                    if wait["Protectcancel"] == True: ret_ += "\n╠❂➣ [ ᴏɴ ] ᴘʀᴏᴛᴇᴄᴛ ᴄᴀɴᴄᴇʟ 「🔒」"
+                                    if settings["Protectcancel"] == True: ret_ += "\n╠❂➣ [ ᴏɴ ] ᴘʀᴏᴛᴇᴄᴛ ᴄᴀɴᴄᴇʟ 「🔒」"
                                     else: ret_ += "\n╠❂➣ [ ᴏғғ ] ᴘʀᴏᴛᴇᴄᴛ ᴄᴀɴᴄᴇʟ 「🔓」"
-                                    if wait["Protectgr"] == True: ret_ += "\n╠❂➣ [ ᴏɴ ] ᴘʀᴏᴛᴇᴄᴛ ɢʀ 「🔒」"
+                                    if settings["Protectgr"] == True: ret_ += "\n╠❂➣ [ ᴏɴ ] ᴘʀᴏᴛᴇᴄᴛ ɢʀ 「🔒」"
                                     else: ret_ += "\n╠❂➣ [ ᴏғғ ] ᴘʀᴏᴛᴇᴄᴛ ɢʀ 「🔓」"
-                                    if wait["Protectinvite"] == True: ret_ += "\n╠❂➣ [ ᴏɴ ] ᴘʀᴏᴛᴇᴄᴛ ɪɴᴠɪᴛᴇ 「🔒」"
+                                    if settings["Protectinvite"] == True: ret_ += "\n╠❂➣ [ ᴏɴ ] ᴘʀᴏᴛᴇᴄᴛ ɪɴᴠɪᴛᴇ 「🔒」"
                                     else: ret_ += "\n╠❂➣ [ ᴏғғ ] ᴘʀᴏᴛᴇᴄᴛ ɪɴᴠɪᴛᴇ 「🔓」"
-                                    if wait["Protectjoin"] == True: ret_ += "\n╠❂➣ [ ᴏɴ ] ᴘʀᴏᴛᴇᴄᴛ ᴊᴏɪɴ 「🔒」"
+                                    if settings["Protectjoin"] == True: ret_ += "\n╠❂➣ [ ᴏɴ ] ᴘʀᴏᴛᴇᴄᴛ ᴊᴏɪɴ 「🔒」"
                                     else: ret_ += "\n╠❂➣ [ ᴏғғ ] ᴘʀᴏᴛᴇᴄᴛ ᴊᴏɪɴ 「🔓」"
-                                    ret_ += "\n╚═════[ ✯ ᴅɴᴀ ʙᴏᴛ ✯ ]═════╝"
-                                    ririn.sendMessage(to, str(ret_))
+                                    ret_ += "\n╚═════[ ✯ SepriBot✯ ]═════╝"
+                                    sepri.sendMessage(to, str(ret_))
                                 except Exception as e:
-                                    ririn.sendMessage(msg.to, str(e))
+                                    sepri.sendMessage(msg.to, str(e))
 # Pembatas Script #
                             elif cmd == "crash":
-                                ririn.sendContact(to, "u1f41296217e740650e0448b96851a3e2',")
+                                sepri.sendContact(to, "u1f41296217e740650e0448b96851a3e2',")
                             elif cmd.startswith("changename:"):
                                 sep = text.split(" ")
                                 string = text.replace(sep[0] + " ","")
                                 if len(string) <= 20:
-                                    profile = ririn.getProfile()
+                                    profile = sepri.getProfile()
                                     profile.displayName = string
-                                    ririn.updateProfile(profile)
-                                    ririn.sendMessage(to,"ᴄʜᴀɴɢᴇ ɴᴀᴍᴇ sᴜᴄᴄᴇs :{}".format(str(string)))
+                                    sepri.updateProfile(profile)
+                                    sepri.sendMessage(to,"ᴄʜᴀɴɢᴇ ɴᴀᴍᴇ sᴜᴄᴄᴇs :{}".format(str(string)))
                             elif cmd.startswith("changebio:"):
                                 sep = text.split(" ")
                                 string = text.replace(sep[0] + " ","")
                                 if len(string) <= 500:
-                                    profile = ririn.getProfile()
+                                    profile = sepri.getProfile()
                                     profile.statusMessage = string
-                                    ririn.updateProfile(profile)
-                                    ririn.sendMessage(to,"ᴄʜᴀɴɢᴇ ᴘʀᴏғɪʟᴇ sᴜᴄᴄᴇs :{}".format(str(string)))
+                                    sepri.updateProfile(profile)
+                                    sepri.sendMessage(to,"ᴄʜᴀɴɢᴇ ᴘʀᴏғɪʟᴇ sᴜᴄᴄᴇs :{}".format(str(string)))
                             elif cmd == "me":
                                 sendMention(to, "@!", [sender])
-                                ririn.sendContact(to, sender)
+                                sepri.sendContact(to, sender)
                             elif cmd == "mymid":
-                                ririn.sendMessage(to, "[ ᴍɪᴅ ]\n{}".format(sender))
+                                sepri.sendMessage(to, "[ ᴍɪᴅ ]\n{}".format(sender))
                             elif cmd == "myname":
-                                contact = ririn.getContact(sender)
-                                ririn.sendMessage(to, "[ ᴅɪsᴘʟᴀʏ ɴᴀᴍᴇ ]\n{}".format(contact.displayName))
+                                contact = sepri.getContact(sender)
+                                sepri.sendMessage(to, "[ ᴅɪsᴘʟᴀʏ ɴᴀᴍᴇ ]\n{}".format(contact.displayName))
                             elif cmd == "mybio":
-                                contact = ririn.getContact(sender)
-                                ririn.sendMessage(to, "[ sᴛᴀᴛᴜs ᴍᴇssᴀɢᴇ ]\n{}".format(contact.statusMessage))
+                                contact = sepri.getContact(sender)
+                                sepri.sendMessage(to, "[ sᴛᴀᴛᴜs ᴍᴇssᴀɢᴇ ]\n{}".format(contact.statusMessage))
                             elif cmd == "mypicture":
-                                contact = ririn.getContact(sender)
-                                ririn.sendImageWithURL(to,"http://dl.profile.line-cdn.net/{}".format(contact.pictureStatus))
+                                contact = sepri.getContact(sender)
+                                sepri.sendImageWithURL(to,"http://dl.profile.line-cdn.net/{}".format(contact.pictureStatus))
                             elif cmd == "myvideoprofile":
-                                contact = ririn.getContact(sender)
-                                ririn.sendVideoWithURL(to,"http://dl.profile.line-cdn.net/{}/vp".format(contact.pictureStatus))
+                                contact = sepri.getContact(sender)
+                                sepri.sendVideoWithURL(to,"http://dl.profile.line-cdn.net/{}/vp".format(contact.pictureStatus))
                             elif cmd == "mycover":
-                                channel = ririn.getProfileCoverURL(sender)          
+                                channel = sepri.getProfileCoverURL(sender)          
                                 path = str(channel)
-                                ririn.sendImageWithURL(to, path)
+                                sepri.sendImageWithURL(to, path)
                             elif cmd.startswith("cloneprofile "):
                                 if 'MENTION' in msg.contentMetadata.keys()!= None:
                                     names = re.findall(r'@(\w+)', text)
@@ -882,34 +729,34 @@ def ririnBot(op):
                                         if mention["M"] not in lists:
                                             lists.append(mention["M"])
                                     for ls in lists:
-                                        contact = ririn.getContact(ls)
-                                        ririn.cloneContactProfile(ls)
-                                        ririn.sendMessage(to, "ᴄʟᴏɴᴇ ᴘʀᴏғɪʟᴇ sᴜᴄᴄᴇs : {}".format(contact.displayName))
+                                        contact = sepri.getContact(ls)
+                                        sepri.cloneContactProfile(ls)
+                                        sepri.sendMessage(to, "ᴄʟᴏɴᴇ ᴘʀᴏғɪʟᴇ sᴜᴄᴄᴇs : {}".format(contact.displayName))
                             elif cmd == "restoreprofile":
                                 try:
-                                    ririnProfile = ririn.getProfile()
-                                    ririnProfile.displayName = str(wait["myProfile"]["displayName"])
-                                    ririnProfile.statusMessage = str(wait["myProfile"]["statusMessage"])
-                                    ririnProfile.pictureStatus = str(wait["myProfile"]["pictureStatus"])
-                                    ririn.updateProfileAttribute(8, ririnProfile.pictureStatus)
-                                    ririn.updateProfile(ririnProfile)
-                                    coverId = str(wait["myProfile"]["coverId"])
-                                    ririn.updateProfileCoverById(coverId)
-                                    ririn.sendMessage(to, "ʀᴇsᴛᴏʀᴇ ᴘʀᴏғɪʟᴇ sᴜᴄᴄᴇs, ᴡᴀɪᴛ ᴀ ғᴇᴡ ᴍɪɴᴜᴛᴇs")
+                                    sepriProfile = sepri.getProfile()
+                                    sepriProfile.displayName = str(settings["myProfile"]["displayName"])
+                                    sepriProfile.statusMessage = str(settings["myProfile"]["statusMessage"])
+                                    sepriProfile.pictureStatus = str(settings["myProfile"]["pictureStatus"])
+                                    sepri.updateProfileAttribute(8, sepriProfile.pictureStatus)
+                                    sepri.updateProfile(sepriProfile)
+                                    coverId = str(settings["myProfile"]["coverId"])
+                                    sepri.updateProfileCoverById(coverId)
+                                    sepri.sendMessage(to, "ʀᴇsᴛᴏʀᴇ ᴘʀᴏғɪʟᴇ sᴜᴄᴄᴇs, ᴡᴀɪᴛ ᴀ ғᴇᴡ ᴍɪɴᴜᴛᴇs")
                                 except Exception as e:
-                                    ririn.sendMessage(to, "ʀᴇsᴛᴏʀᴇ ᴘʀᴏғɪʟᴇ ғᴀɪʟᴇᴅ")
+                                    sepri.sendMessage(to, "ʀᴇsᴛᴏʀᴇ ᴘʀᴏғɪʟᴇ ғᴀɪʟᴇᴅ")
                                     logError(error)
                             elif cmd == "backupprofile":
                                 try:
-                                    profile = ririn.getProfile()
-                                    wait["myProfile"]["displayName"] = str(profile.displayName)
-                                    wait["myProfile"]["statusMessage"] = str(profile.statusMessage)
-                                    wait["myProfile"]["pictureStatus"] = str(profile.pictureStatus)
-                                    coverId = ririn.getProfileDetail()["result"]["objectId"]
-                                    wait["myProfile"]["coverId"] = str(coverId)
-                                    ririn.sendMessage(to, "ʙᴀᴄᴋᴜᴘ ᴘʀᴏғɪʟᴇ sᴜᴄᴄᴇs")
+                                    profile = sepri.getProfile()
+                                    settings["myProfile"]["displayName"] = str(profile.displayName)
+                                    settings["myProfile"]["statusMessage"] = str(profile.statusMessage)
+                                    settings["myProfile"]["pictureStatus"] = str(profile.pictureStatus)
+                                    coverId = sepri.getProfileDetail()["result"]["objectId"]
+                                    settings["myProfile"]["coverId"] = str(coverId)
+                                    sepri.sendMessage(to, "ʙᴀᴄᴋᴜᴘ ᴘʀᴏғɪʟᴇ sᴜᴄᴄᴇs")
                                 except Exception as e:
-                                    ririn.sendMessage(to, "ʙᴀᴄᴋᴜᴘ ᴘʀᴏғɪʟᴇ ғᴀɪʟᴇᴅ")
+                                    sepri.sendMessage(to, "ʙᴀᴄᴋᴜᴘ ᴘʀᴏғɪʟᴇ ғᴀɪʟᴇᴅ")
                                     logError(error)
                             elif cmd.startswith("stealmid "):
                                 if 'MENTION' in msg.contentMetadata.keys()!= None:
@@ -923,7 +770,7 @@ def ririnBot(op):
                                     ret_ = "[ Mid User ]"
                                     for ls in lists:
                                         ret_ += "\n{}".format(str(ls))
-                                    ririn.sendMessage(to, str(ret_))
+                                    sepri.sendMessage(to, str(ret_))
                             elif cmd.startswith("stealname "):
                                 if 'MENTION' in msg.contentMetadata.keys()!= None:
                                     names = re.findall(r'@(\w+)', text)
@@ -934,8 +781,8 @@ def ririnBot(op):
                                         if mention["M"] not in lists:
                                             lists.append(mention["M"])
                                     for ls in lists:
-                                        contact = ririn.getContact(ls)
-                                        ririn.sendMessage(to, "[ Display Name ]\n{}".format(str(contact.displayName)))
+                                        contact = sepri.getContact(ls)
+                                        sepri.sendMessage(to, "[ Display Name ]\n{}".format(str(contact.displayName)))
                             elif cmd.startswith("stealbio "):
                                 if 'MENTION' in msg.contentMetadata.keys()!= None:
                                     names = re.findall(r'@(\w+)', text)
@@ -946,8 +793,8 @@ def ririnBot(op):
                                         if mention["M"] not in lists:
                                             lists.append(mention["M"])
                                     for ls in lists:
-                                        contact = ririn.getContact(ls)
-                                        ririn.sendMessage(to, "[ sᴛᴀᴛᴜs ᴍᴇssᴀɢᴇ ]\n{}".format(str(contact.statusMessage)))
+                                        contact = sepri.getContact(ls)
+                                        sepri.sendMessage(to, "[ sᴛᴀᴛᴜs ᴍᴇssᴀɢᴇ ]\n{}".format(str(contact.statusMessage)))
                             elif cmd.startswith("stealpicture"):
                                 if 'MENTION' in msg.contentMetadata.keys()!= None:
                                     names = re.findall(r'@(\w+)', text)
@@ -958,9 +805,9 @@ def ririnBot(op):
                                         if mention["M"] not in lists:
                                             lists.append(mention["M"])
                                     for ls in lists:
-                                        contact = ririn.getContact(ls)
+                                        contact = sepri.getContact(ls)
                                         path = "http://dl.profile.line.naver.jp/{}".format(contact.pictureStatus)
-                                        ririn.sendImageWithURL(to, str(path))
+                                        sepri.sendImageWithURL(to, str(path))
                             elif cmd.startswith("stealvideoprofile "):
                                 if 'MENTION' in msg.contentMetadata.keys()!= None:
                                     names = re.findall(r'@(\w+)', text)
@@ -971,11 +818,11 @@ def ririnBot(op):
                                         if mention["M"] not in lists:
                                             lists.append(mention["M"])
                                     for ls in lists:
-                                        contact = ririn.getContact(ls)
+                                        contact = sepri.getContact(ls)
                                         path = "http://dl.profile.line.naver.jp/{}/vp".format(contact.pictureStatus)
-                                        ririn.sendVideoWithURL(to, str(path))
+                                        sepri.sendVideoWithURL(to, str(path))
                             elif cmd.startswith("stealcover "):
-                                if ririn != None:
+                                if sepri != None:
                                     if 'MENTION' in msg.contentMetadata.keys()!= None:
                                         names = re.findall(r'@(\w+)', text)
                                         mention = ast.literal_eval(msg.contentMetadata['MENTION'])
@@ -985,52 +832,52 @@ def ririnBot(op):
                                             if mention["M"] not in lists:
                                                 lists.append(mention["M"])
                                         for ls in lists:
-                                            channel = ririn.getProfileCoverURL(ls)
+                                            channel = sepri.getProfileCoverURL(ls)
                                             path = str(channel)
-                                            ririn.sendImageWithURL(to, str(path))
+                                            sepri.sendImageWithURL(to, str(path))
 # Pembatas Script #
                             elif cmd == 'groupcreator':
-                                group = ririn.getGroup(to)
+                                group = sepri.getGroup(to)
                                 GS = group.creator.mid
-                                ririn.sendContact(to, GS)
+                                sepri.sendContact(to, GS)
                             elif cmd == 'groupid':
-                                gid = ririn.getGroup(to)
-                                ririn.sendMessage(to, "[ɢʀᴏᴜᴘ ɪᴅ : : ]\n" + gid.id)
+                                gid = sepri.getGroup(to)
+                                sepri.sendMessage(to, "[ɢʀᴏᴜᴘ ɪᴅ : : ]\n" + gid.id)
                             elif cmd == 'grouppicture':
-                                group = ririn.getGroup(to)
+                                group = sepri.getGroup(to)
                                 path = "http://dl.profile.line-cdn.net/" + group.pictureStatus
-                                ririn.sendImageWithURL(to, path)
+                                sepri.sendImageWithURL(to, path)
                             elif cmd == 'groupname':
-                                gid = ririn.getGroup(to)
-                                ririn.sendMessage(to, "[ɢʀᴏᴜᴘ ɴᴀᴍᴇ : ]\n" + gid.name)
+                                gid = sepri.getGroup(to)
+                                sepri.sendMessage(to, "[ɢʀᴏᴜᴘ ɴᴀᴍᴇ : ]\n" + gid.name)
                             elif cmd == 'groupticket':
                                 if msg.toType == 2:
-                                    group = ririn.getGroup(to)
+                                    group = sepri.getGroup(to)
                                     if group.preventedJoinByTicket == False:
-                                        ticket = ririn.reissueGroupTicket(to)
-                                        ririn.sendMessage(to, "[ ɢʀᴏᴜᴘ ᴛɪᴄᴋᴇᴛ ]\nhttps://line.me/R/ti/g/{}".format(str(ticket)))
+                                        ticket = sepri.reissueGroupTicket(to)
+                                        sepri.sendMessage(to, "[ ɢʀᴏᴜᴘ ᴛɪᴄᴋᴇᴛ ]\nhttps://line.me/R/ti/g/{}".format(str(ticket)))
                                     else:
-                                        ririn.sendMessage(to, "ᴛʜᴇ ǫʀ ɢʀᴏᴜᴘ ɪs ɴᴏᴛ ᴏᴘᴇɴ ᴘʟᴇᴀsᴇ ᴏᴘᴇɴ ɪᴛ ғɪʀsᴛ ᴡɪᴛʜ ᴛʜᴇ ᴄᴏᴍᴍᴀɴᴅ {}openqr".format(str(wait["keyCommand"])))
+                                        sepri.sendMessage(to, "ᴛʜᴇ ǫʀ ɢʀᴏᴜᴘ ɪs ɴᴏᴛ ᴏᴘᴇɴ ᴘʟᴇᴀsᴇ ᴏᴘᴇɴ ɪᴛ ғɪʀsᴛ ᴡɪᴛʜ ᴛʜᴇ ᴄᴏᴍᴍᴀɴᴅ {}openqr".format(str(settings["keyCommand"])))
                             elif cmd == 'groupticket on':
                                 if msg.toType == 2:
-                                    group = ririn.getGroup(to)
+                                    group = sepri.getGroup(to)
                                     if group.preventedJoinByTicket == False:
-                                        ririn.sendMessage(to, "ᴀʟʀᴇᴀᴅʏ ᴏᴘᴇɴ")
+                                        sepri.sendMessage(to, "ᴀʟʀᴇᴀᴅʏ ᴏᴘᴇɴ")
                                     else:
                                         group.preventedJoinByTicket = False
-                                        ririn.updateGroup(group)
-                                        ririn.sendMessage(to, "sᴜᴄᴄᴇs ᴏᴘᴇɴ ǫʀ ɢʀᴏᴜᴘ")
+                                        sepri.updateGroup(group)
+                                        sepri.sendMessage(to, "sᴜᴄᴄᴇs ᴏᴘᴇɴ ǫʀ ɢʀᴏᴜᴘ")
                             elif cmd == 'groupticket off':
                                 if msg.toType == 2:
-                                    group = ririn.getGroup(to)
+                                    group = sepri.getGroup(to)
                                     if group.preventedJoinByTicket == True:
-                                        ririn.sendMessage(to, "ᴀʟʀᴇᴀᴅʏ ᴄʟᴏsᴇᴅ")
+                                        sepri.sendMessage(to, "ᴀʟʀᴇᴀᴅʏ ᴄʟᴏsᴇᴅ")
                                     else:
                                         group.preventedJoinByTicket = True
-                                        ririn.updateGroup(group)
-                                        ririn.sendMessage(to, "sᴜᴄᴄᴇs ᴄʟᴏsᴇ ǫʀ ɢʀᴏᴜᴘ")
+                                        sepri.updateGroup(group)
+                                        sepri.sendMessage(to, "sᴜᴄᴄᴇs ᴄʟᴏsᴇ ǫʀ ɢʀᴏᴜᴘ")
                             elif cmd == 'groupinfo':
-                                group = ririn.getGroup(to)
+                                group = sepri.getGroup(to)
                                 try:
                                     gCreator = group.creator.displayName
                                 except:
@@ -1044,7 +891,7 @@ def ririnBot(op):
                                     gTicket = "ɴᴏʟ'"
                                 else:
                                     gQr = "ᴏᴘᴇɴ"
-                                    gTicket = "https://line.me/R/ti/g/{}".format(str(ririn.reissueGroupTicket(group.id)))
+                                    gTicket = "https://line.me/R/ti/g/{}".format(str(sepri.reissueGroupTicket(group.id)))
                                 path = "http://dl.profile.line-cdn.net/" + group.pictureStatus
                                 ret_ = "╔════[ ·✪ɢʀᴏᴜᴘ ɪɴғᴏ✪· ]════╗"
                                 ret_ += "\n╠❂➣ ɢʀᴏᴜᴘ ɴᴀᴍᴇ : {}".format(str(group.name))
@@ -1054,40 +901,40 @@ def ririnBot(op):
                                 ret_ += "\n╠❂➣ ᴘᴇɴᴅɪɴɢ : {}".format(gPending)
                                 ret_ += "\n╠❂➣ ǫʀ ɢʀᴏᴜᴘ : {}".format(gQr)
                                 ret_ += "\n╠❂➣ ᴛɪᴄᴋᴇᴛ ɢʀᴏᴜᴘ : {}".format(gTicket)
-                                ret_ += "\n╚═════[ ✯ ᴅɴᴀ ʙᴏᴛ ✯ ]═════╝"
-                                ririn.sendMessage(to, str(ret_))
-                                ririn.sendImageWithURL(to, path)
+                                ret_ += "\n╚═════[ ✯ SepriBot✯ ]═════╝"
+                                sepri.sendMessage(to, str(ret_))
+                                sepri.sendImageWithURL(to, path)
                             elif cmd == 'memberlist':
                                 if msg.toType == 2:
-                                    group = ririn.getGroup(to)
+                                    group = sepri.getGroup(to)
                                     ret_ = "╔══[ ᴍᴇᴍʙᴇʀ  ʟɪsᴛ ]══✪"
                                     no = 0 + 1
                                     for mem in group.members:
                                         ret_ += "\n╠❂➣ {}. {}".format(str(no), str(mem.displayName))
                                         no += 1
                                     ret_ += "\n╚═══[ ᴛᴏᴛᴀʟ : {} ]═══✪".format(str(len(group.members)))
-                                    ririn.sendMessage(to, str(ret_))
+                                    sepri.sendMessage(to, str(ret_))
                             elif cmd == 'grouplist':
-                                    groups = ririn.groups
+                                    groups = sepri.groups
                                     ret_ = "╔═[ ✯ ɢʀᴏᴜᴘ  ʟɪsᴛ ✯ ]═✪"
                                     no = 0 + 1
                                     for gid in groups:
-                                        group = ririn.getGroup(gid)
+                                        group = sepri.getGroup(gid)
                                         ret_ += "\n╠❂➣ {}. {} | {}".format(str(no), str(group.name), str(len(group.members)))
                                         no += 1
                                     ret_ += "\n╚═══[ ᴛᴏᴛᴀʟ : {} ]═══✪".format(str(len(groups)))
-                                    ririn.sendMessage(to, str(ret_))
+                                    sepri.sendMessage(to, str(ret_))
 # Pembatas Script #
                             elif cmd == "changepictureprofile":
-                                wait["changePictureProfile"] = True
-                                ririn.sendMessage(to, "sᴇɴᴅ ᴘɪᴄᴛᴜʀᴇ")
+                                settings["changePictureProfile"] = True
+                                sepri.sendMessage(to, "sᴇɴᴅ ᴘɪᴄᴛᴜʀᴇ")
                             elif cmd == "changegrouppicture":
                                 if msg.toType == 2:
-                                    if to not in wait["changeGroupPicture"]:
-                                        wait["changeGroupPicture"].append(to)
-                                    ririn.sendMessage(to, "sᴇɴᴅ ᴘɪᴄᴛᴜʀᴇ")
+                                    if to not in settings["changeGroupPicture"]:
+                                        settings["changeGroupPicture"].append(to)
+                                    sepri.sendMessage(to, "sᴇɴᴅ ᴘɪᴄᴛᴜʀᴇ")
                             elif cmd == 'mention':
-                                group = ririn.getGroup(msg.to)
+                                group = sepri.getGroup(msg.to)
                                 nama = [contact.mid for contact in group.members]
                                 k = len(nama)//100
                                 for a in range(k+1):
@@ -1098,8 +945,8 @@ def ririnBot(op):
                                         b.append({"S":str(s), "E" :str(s+6), "M":i.mid})
                                         s += 7
                                         txt += u'@Zero \n'
-                                    ririn.sendMessage(to, text=txt, contentMetadata={u'MENTION': json.dumps({'MENTIONEES':b})}, contentType=0)
-                                    ririn.sendMessage(to, "Total {} Mention".format(str(len(nama))))
+                                    sepri.sendMessage(to, text=txt, contentMetadata={u'MENTION': json.dumps({'MENTIONEES':b})}, contentType=0)
+                                    sepri.sendMessage(to, "Total {} Mention".format(str(len(nama))))
                                     
                             elif cmd == "sider on":
                             	try:
@@ -1111,15 +958,15 @@ def ririnBot(op):
                             	cctv['point'][msg.to] = msg.id
                             	cctv['sidermem'][msg.to] = ""
                             	cctv['cyduk'][msg.to]=True
-                            	wait["Sider"] = True
-                            	ririn.sendMessage(msg.to,"sɪᴅᴇʀ sᴇᴛ ᴛᴏ ᴏɴ")
+                            	settings["Sider"] = True
+                            	sepri.sendMessage(msg.to,"sɪᴅᴇʀ sᴇᴛ ᴛᴏ ᴏɴ")
                             elif cmd == "sider off":
                             	if msg.to in cctv['point']:
                             		cctv['cyduk'][msg.to]=False
-                            		wait["Sider"] = False
-                            		ririn.sendMessage(msg.to,"sɪᴅᴇʀ sᴇᴛ ᴛᴏ ᴏғғ")
+                            		settings["Sider"] = False
+                            		sepri.sendMessage(msg.to,"sɪᴅᴇʀ sᴇᴛ ᴛᴏ ᴏғғ")
                             	else:
-                            		ririn.sendMessage(msg.to,"sɪᴅᴇʀ ɴᴏᴛ sᴇᴛ")           
+                            		sepri.sendMessage(msg.to,"sɪᴅᴇʀ ɴᴏᴛ sᴇᴛ")           
                             elif cmd == "lurking on":
                                 tz = pytz.timezone("Asia/Makassar")
                                 timeNow = datetime.now(tz=tz)
@@ -1144,7 +991,7 @@ def ririnBot(op):
                                     read['readMember'][receiver] = ""
                                     read['readTime'][receiver] = readTime
                                     read['ROM'][receiver] = {}
-                                    ririn.sendMessage(receiver,"ʟᴜʀᴋɪɴɢ sᴇᴛ ᴏɴ")
+                                    sepri.sendMessage(receiver,"ʟᴜʀᴋɪɴɢ sᴇᴛ ᴏɴ")
                                 else:
                                     try:
                                         del read['readPoint'][receiver]
@@ -1156,7 +1003,7 @@ def ririnBot(op):
                                     read['readMember'][receiver] = ""
                                     read['readTime'][receiver] = readTime
                                     read['ROM'][receiver] = {}
-                                    ririn.sendMessage(receiver,"sᴇᴛ ʀᴇᴀᴅɪɴɢ ᴘᴏɪɴᴛ : \n" + readTime)
+                                    sepri.sendMessage(receiver,"sᴇᴛ ʀᴇᴀᴅɪɴɢ ᴘᴏɪɴᴛ : \n" + readTime)
                             elif cmd == "lurking off":
                                 tz = pytz.timezone("Asia/Makassar")
                                 timeNow = datetime.now(tz=tz)
@@ -1171,7 +1018,7 @@ def ririnBot(op):
                                     if bln == str(k): bln = bulan[k-1]
                                 readTime = hasil + ", " + timeNow.strftime('%d') + " - " + bln + " - " + timeNow.strftime('%Y') + "\nJam : [ " + timeNow.strftime('%H:%M:%S') + " ]"
                                 if receiver not in read['readPoint']:
-                                    ririn.sendMessage(receiver,"ʟᴜʀᴋɪɴɢ sᴇᴛ ᴏғғ")
+                                    sepri.sendMessage(receiver,"ʟᴜʀᴋɪɴɢ sᴇᴛ ᴏғғ")
                                 else:
                                     try:
                                         del read['readPoint'][receiver]
@@ -1179,7 +1026,7 @@ def ririnBot(op):
                                         del read['readTime'][receiver]
                                     except:
                                         pass
-                                    ririn.sendMessage(receiver,"ᴅᴇʟᴇᴛᴇ ʀᴇᴀᴅɪɴɢ ᴘᴏɪɴᴛ : \n" + readTime)
+                                    sepri.sendMessage(receiver,"ᴅᴇʟᴇᴛᴇ ʀᴇᴀᴅɪɴɢ ᴘᴏɪɴᴛ : \n" + readTime)
         
                             elif cmd == "lurking reset":
                                 tz = pytz.timezone("Asia/Makassar")
@@ -1206,9 +1053,9 @@ def ririnBot(op):
                                     read['readMember'][receiver] = ""
                                     read['readTime'][receiver] = readTime
                                     read['ROM'][receiver] = {}
-                                    ririn.sendMessage(msg.to, "ʀᴇsᴇᴛ ʀᴇᴀᴅɪɴɢ ᴘᴏɪɴᴛ : \n" + readTime)
+                                    sepri.sendMessage(msg.to, "ʀᴇsᴇᴛ ʀᴇᴀᴅɪɴɢ ᴘᴏɪɴᴛ : \n" + readTime)
                                 else:
-                                    ririn.sendMessage(msg.to, "ʟᴜʀᴋɪɴɢ ɴᴏᴛ ᴀᴋᴛɪᴠᴇ, ᴄᴏᴜʟᴅ ɴᴏᴛ ʙᴇ ʀᴇsᴇᴛ")
+                                    sepri.sendMessage(msg.to, "ʟᴜʀᴋɪɴɢ ɴᴏᴛ ᴀᴋᴛɪᴠᴇ, ᴄᴏᴜʟᴅ ɴᴏᴛ ʙᴇ ʀᴇsᴇᴛ")
                                     
                             elif cmd == "lurking":
                                 tz = pytz.timezone("Asia/Makassar")
@@ -1225,12 +1072,12 @@ def ririnBot(op):
                                 readTime = hasil + ", " + timeNow.strftime('%d') + " - " + bln + " - " + timeNow.strftime('%Y') + "\nJam : [ " + timeNow.strftime('%H:%M:%S') + " ]"
                                 if receiver in read['readPoint']:
                                     if read["ROM"][receiver].items() == []:
-                                        ririn.sendMessage(receiver,"ɴᴏ sɪᴅᴇʀ")
+                                        sepri.sendMessage(receiver,"ɴᴏ sɪᴅᴇʀ")
                                     else:
                                         chiya = []
                                         for rom in read["ROM"][receiver].items():
                                             chiya.append(rom[1])
-                                        cmem = ririn.getContacts(chiya) 
+                                        cmem = sepri.getContacts(chiya) 
                                         zx = ""
                                         zxc = ""
                                         zx2 = []
@@ -1246,12 +1093,12 @@ def ririnBot(op):
                                         zxc += pesan2
                                     text = xpesan+ zxc + "\n" + readTime
                                     try:
-                                        ririn.sendMessage(receiver, text, contentMetadata={'MENTION':str('{"MENTIONEES":'+json.dumps(zx2).replace(' ','')+'}')}, contentType=0)
+                                        sepri.sendMessage(receiver, text, contentMetadata={'MENTION':str('{"MENTIONEES":'+json.dumps(zx2).replace(' ','')+'}')}, contentType=0)
                                     except Exception as error:
                                         print (error)
                                     pass
                                 else:
-                                    ririn.sendMessage(receiver,"ʟᴜʀᴋɪɴɢ ɴᴏᴛ ᴀᴄᴛɪᴠᴇ")
+                                    sepri.sendMessage(receiver,"ʟᴜʀᴋɪɴɢ ɴᴏᴛ ᴀᴄᴛɪᴠᴇ")
                             elif cmd.startswith("mimicadd"):
                                 targets = []
                                 key = eval(msg.contentMetadata["MENTION"])
@@ -1260,11 +1107,11 @@ def ririnBot(op):
                                     targets.append(x["M"])
                                 for target in targets:
                                     try:
-                                        wait["mimic"]["target"][target] = True
-                                        ririn.sendMessage(msg.to,"ᴛᴀʀɢᴇᴛ ᴀᴅᴅᴇᴅ")
+                                        settings["mimic"]["target"][target] = True
+                                        sepri.sendMessage(msg.to,"ᴛᴀʀɢᴇᴛ ᴀᴅᴅᴇᴅ")
                                         break
                                     except:
-                                        ririn.sendMessage(msg.to,"ғᴀɪʟᴇᴅ ᴀᴅᴅᴇᴅ ᴛᴀʀɢᴇᴛ")
+                                        sepri.sendMessage(msg.to,"ғᴀɪʟᴇᴅ ᴀᴅᴅᴇᴅ ᴛᴀʀɢᴇᴛ")
                                         break
                             elif cmd.startswith("mimicdel"):
                                 targets = []
@@ -1274,34 +1121,34 @@ def ririnBot(op):
                                     targets.append(x["M"])
                                 for target in targets:
                                     try:
-                                        del wait["mimic"]["target"][target]
-                                        ririn.sendMessage(msg.to,"ᴛᴀɢᴇᴛ ᴅᴇʟᴇᴛᴇᴅ")
+                                        del settings["mimic"]["target"][target]
+                                        sepri.sendMessage(msg.to,"ᴛᴀɢᴇᴛ ᴅᴇʟᴇᴛᴇᴅ")
                                         break
                                     except:
-                                        ririn.sendMessage(msg.to,"ғᴀɪʟ ᴅᴇʟᴇᴛᴇᴅ ᴛᴀʀɢᴇᴛ")
+                                        sepri.sendMessage(msg.to,"ғᴀɪʟ ᴅᴇʟᴇᴛᴇᴅ ᴛᴀʀɢᴇᴛ")
                                         break
                                     
                             elif cmd == "mimiclist":
-                                if wait["mimic"]["target"] == {}:
-                                    ririn.sendMessage(msg.to,"ɴᴏ ᴛᴀʀɢᴇᴛ")
+                                if settings["mimic"]["target"] == {}:
+                                    sepri.sendMessage(msg.to,"ɴᴏ ᴛᴀʀɢᴇᴛ")
                                 else:
                                     mc = "╔════[ ·✪·ᴍɪᴍɪᴄ ʟɪsᴛ·✪· ]════╗"
-                                    for mi_d in wait["mimic"]["target"]:
-                                        mc += "\n╠❂➣ "+ririn.getContact(mi_d).displayName
-                                    mc += "\n╚═════[  ✯ ᴅɴᴀ ʙᴏᴛ ✯ ]═════╝"
-                                    ririn.sendMessage(msg.to,mc)
+                                    for mi_d in settings["mimic"]["target"]:
+                                        mc += "\n╠❂➣ "+sepri.getContact(mi_d).displayName
+                                    mc += "\n╚═════[  ✯ SepriBot✯ ]═════╝"
+                                    sepri.sendMessage(msg.to,mc)
                                 
                             elif cmd.startswith("mimic"):
                                 sep = text.split(" ")
                                 mic = text.replace(sep[0] + " ","")
                                 if mic == "on":
-                                    if wait["mimic"]["status"] == False:
-                                        wait["mimic"]["status"] = True
-                                        ririn.sendMessage(msg.to,"ᴍɪᴍɪᴄ ᴏɴ")
+                                    if settings["mimic"]["status"] == False:
+                                        settings["mimic"]["status"] = True
+                                        sepri.sendMessage(msg.to,"ᴍɪᴍɪᴄ ᴏɴ")
                                 elif mic == "off":
-                                    if wait["mimic"]["status"] == True:
-                                        wait["mimic"]["status"] = False
-                                        ririn.sendMessage(msg.to,"ᴍɪᴍɪᴄ ᴏғғ")
+                                    if settings["mimic"]["status"] == True:
+                                        settings["mimic"]["status"] = False
+                                        sepri.sendMessage(msg.to,"ᴍɪᴍɪᴄ ᴏғғ")
 # Pembatas Script #   
                             elif cmd.startswith("checkwebsite"):
                                 try:
@@ -1310,7 +1157,7 @@ def ririnBot(op):
                                     r = requests.get("http://rahandiapi.herokuapp.com/sswebAPI?key=betakey&link={}".format(urllib.parse.quote(query)))
                                     data = r.text
                                     data = json.loads(data)
-                                    ririn.sendImageWithURL(to, data["result"])
+                                    sepri.sendImageWithURL(to, data["result"])
                                 except Exception as error:
                                     logError(error)
                             elif cmd.startswith("checkdate"):
@@ -1325,7 +1172,7 @@ def ririnBot(op):
                                     ret_ += "\nAge : {}".format(str(data["data"]["usia"]))
                                     ret_ += "\nBirthday : {}".format(str(data["data"]["ultah"]))
                                     ret_ += "\nZodiak : {}".format(str(data["data"]["zodiak"]))
-                                    ririn.sendMessage(to, str(ret_))
+                                    sepri.sendMessage(to, str(ret_))
                                 except Exception as error:
                                     logError(error)
                             elif cmd.startswith("checkpraytime "):
@@ -1346,8 +1193,8 @@ def ririnBot(op):
                                     ret_ += "\n╠❂➣ " + data[3]
                                     ret_ += "\n╠❂➣ " + data[4]
                                     ret_ += "\n╠❂➣ " + data[5]
-                                    ret_ += "\n╚════[ ✯ ᴅɴᴀ ʙᴏᴛ ✯ ]"
-                                    ririn.sendMessage(msg.to, str(ret_))
+                                    ret_ += "\n╚════[ ✯ SepriBot✯ ]"
+                                    sepri.sendMessage(msg.to, str(ret_))
                             elif cmd.startswith("checkweather "):
                                 try:
                                     sep = text.split(" ")
@@ -1367,8 +1214,8 @@ def ririnBot(op):
                                         ret_ += "\n╠════[ ᴛɪᴍᴇ sᴛᴀᴛᴜs ]"
                                         ret_ += "\n╠❂➣ ᴛᴀɴɢɢᴀʟ : " + datetime.strftime(timeNow,'%Y-%m-%d')
                                         ret_ += "\n╠❂➣ ᴊᴀᴍ : " + datetime.strftime(timeNow,'%H:%M:%S') + " ᴡɪʙ"
-                                        ret_ += "\n╚════[ ✯ ᴅɴᴀ ʙᴏᴛ ✯ ]"
-                                        ririn.sendMessage(to, str(ret_))
+                                        ret_ += "\n╚════[ ✯ SepriBot✯ ]"
+                                        sepri.sendMessage(to, str(ret_))
                                 except Exception as error:
                                     logError(error)
                             elif cmd.startswith("checklocation "):
@@ -1383,8 +1230,8 @@ def ririnBot(op):
                                         ret_ = "╔═══[ ʟᴏᴄᴀᴛɪᴏɴ sᴛᴀᴛᴜs ]"
                                         ret_ += "\n╠❂➣ ʟᴏᴄᴀᴛɪᴏɴ : " + data[0]
                                         ret_ += "\n╠❂➣  ɢᴏᴏɢʟᴇ ᴍᴀᴘs : " + link
-                                        ret_ += "\n╚════[ ✯ ᴅɴᴀ ʙᴏᴛ ✯ ]"
-                                        ririn.sendMessage(to, str(ret_))
+                                        ret_ += "\n╚════[ ✯ SepriBot✯ ]"
+                                        sepri.sendMessage(to, str(ret_))
                                 except Exception as error:
                                     logError(error)
                             elif cmd.startswith("instainfo"):
@@ -1412,8 +1259,8 @@ def ririnBot(op):
                                         ret_ += "\n╠ Total Post : {}".format(str(data["graphql"]["user"]["edge_owner_to_timeline_media"]["count"]))
                                         ret_ += "\n╚══[ https://www.instagram.com/{} ]".format(search)
                                         path = data["graphql"]["user"]["profile_pic_url_hd"]
-                                        ririn.sendImageWithURL(to, str(path))
-                                        ririn.sendMessage(to, str(ret_))
+                                        sepri.sendImageWithURL(to, str(path))
+                                        sepri.sendMessage(to, str(ret_))
                                 except Exception as error:
                                     logError(error)
                             elif cmd.startswith("instapost"):
@@ -1428,14 +1275,14 @@ def ririnBot(op):
                                     data = json.loads(data)
                                     if data["find"] == True:
                                         if data["media"]["mediatype"] == 1:
-                                            ririn.sendImageWithURL(msg.to, str(data["media"]["url"]))
+                                            sepri.sendImageWithURL(msg.to, str(data["media"]["url"]))
                                         if data["media"]["mediatype"] == 2:
-                                            ririn.sendVideoWithURL(msg.to, str(data["media"]["url"]))
+                                            sepri.sendVideoWithURL(msg.to, str(data["media"]["url"]))
                                         ret_ = "╔══[ Info Post ]"
                                         ret_ += "\n╠ Jumlah Like : {}".format(str(data["media"]["like_count"]))
                                         ret_ += "\n╠ Jumlah Comment : {}".format(str(data["media"]["comment_count"]))
                                         ret_ += "\n╚══[ Caption ]\n{}".format(str(data["media"]["caption"]))
-                                        ririn.sendMessage(to, str(ret_))
+                                        sepri.sendMessage(to, str(ret_))
                                 except Exception as error:
                                     logError(error)
                             elif cmd.startswith("instastory"):
@@ -1453,9 +1300,9 @@ def ririnBot(op):
                                             if num <= len(data["url"]):
                                                 search = data["url"][num - 1]
                                                 if search["tipe"] == 1:
-                                                    ririn.sendImageWithURL(to, str(search["link"]))
+                                                    sepri.sendImageWithURL(to, str(search["link"]))
                                                 if search["tipe"] == 2:
-                                                    ririn.sendVideoWithURL(to, str(search["link"]))
+                                                    sepri.sendVideoWithURL(to, str(search["link"]))
                                 except Exception as error:
                                     logError(error)
                                     
@@ -1465,10 +1312,10 @@ def ririnBot(op):
                                 lang = sep[0]
                                 say = text.replace("say-" + lang + " ","")
                                 if lang not in list_language["list_textToSpeech"]:
-                                    return ririn.sendMessage(to, "ʟᴀɴɢᴜᴀɢᴇ ɴᴏᴛ ғᴏᴜɴᴅ")
+                                    return sepri.sendMessage(to, "ʟᴀɴɢᴜᴀɢᴇ ɴᴏᴛ ғᴏᴜɴᴅ")
                                 tts = gTTS(text=say, lang=lang)
                                 tts.save("hasil.mp3")
-                                ririn.sendAudio(to,"hasil.mp3")
+                                sepri.sendAudio(to,"hasil.mp3")
                                 
                             elif cmd.startswith("searchimage"):
                                 try:
@@ -1482,7 +1329,7 @@ def ririnBot(op):
                                         path = random.choice(items)
                                         a = items.index(path)
                                         b = len(items)
-                                        ririn.sendImageWithURL(to, str(path))
+                                        sepri.sendImageWithURL(to, str(path))
                                 except Exception as error:
                                     logError(error)
                             elif cmd.startswith("searchmusic "):
@@ -1501,7 +1348,7 @@ def ririnBot(op):
                                         ret_ += "\n╠ {}. {}".format(str(num), str(music["single"]))
                                     ret_ += "\n╚══[ ᴛᴏᴛᴀʟ {} ᴍᴜsɪᴄ ] ".format(str(len(data["result"])))
                                     ret_ += "\n\nᴜɴᴛᴜᴋ ᴍᴇʟɪʜᴀᴛ ᴅᴇᴛᴀɪʟs ᴍᴜsɪᴄ, sɪʟᴀʜᴋᴀɴ ɢᴜɴᴀᴋᴀɴ ᴄᴏᴍᴍᴀɴᴅ {}sᴇᴀʀᴄʜᴍᴜsɪᴄ {}|「ɴᴜᴍʙᴇʀ」".format(str(setKey), str(search))
-                                    ririn.sendMessage(to, str(ret_))
+                                    sepri.sendMessage(to, str(ret_))
                                 elif len(cond) == 2:
                                     num = int(cond[1])
                                     if num <= len(data["result"]):
@@ -1515,10 +1362,10 @@ def ririnBot(op):
                                             ret_ += "\n╠❂➣ ᴀʟʙᴜᴍ : {}".format(str(data["result"]["album"]))
                                             ret_ += "\n╠❂➣ sɪᴢᴇ : {}".format(str(data["result"]["size"]))
                                             ret_ += "\n╠❂➣ ʟɪɴᴋ :  {}".format(str(data["result"]["mp3"][0]))
-                                            ret_ += "\n╚════[ ✯ ᴅɴᴀ ʙᴏᴛ ✯ ]"
-                                            ririn.sendImageWithURL(to, str(data["result"]["img"]))
-                                            ririn.sendMessage(to, str(ret_))
-                                            ririn.sendAudioWithURL(to, str(data["result"]["mp3"][0]))
+                                            ret_ += "\n╚════[ ✯ SepriBot✯ ]"
+                                            sepri.sendImageWithURL(to, str(data["result"]["img"]))
+                                            sepri.sendMessage(to, str(ret_))
+                                            sepri.sendAudioWithURL(to, str(data["result"]["mp3"][0]))
                             elif cmd.startswith("searchlyric"):
                                 sep = msg.text.split(" ")
                                 query = msg.text.replace(sep[0] + " ","")
@@ -1535,7 +1382,7 @@ def ririnBot(op):
                                         ret_ += "\n╠❂➣ {}. {}".format(str(num), str(lyric["single"]))
                                     ret_ += "\n╚══[ ᴛᴏᴛᴀʟ {} ᴍᴜsɪᴄ ]".format(str(len(data["results"])))
                                     ret_ += "\n\nᴜɴᴛᴜᴋ ᴍᴇʟɪʜᴀᴛ ᴅᴇᴛᴀɪʟs ʟʏʀɪᴄ, sɪʟᴀʜᴋᴀɴ ɢᴜɴᴀᴋᴀɴ ᴄᴏᴍᴍᴀɴᴅ {}sᴇᴀʀᴄʜʟʏʀɪᴄ {}|「ɴᴜᴍʙᴇʀ」".format(str(setKey), str(search))
-                                    ririn.sendMessage(to, str(ret_))
+                                    sepri.sendMessage(to, str(ret_))
                                 elif len(cond) == 2:
                                     num = int(cond[1])
                                     if num <= len(data["results"]):
@@ -1550,7 +1397,7 @@ def ririnBot(op):
                                         removeString = "[1234567890.:]"
                                         for char in removeString:
                                             lyric = lyric.replace(char,'')
-                                        ririn.sendMessage(msg.to, str(lyric))
+                                        sepri.sendMessage(msg.to, str(lyric))
                             elif cmd.startswith("searchyoutube"):
                                 sep = text.split(" ")
                                 search = text.replace(sep[0] + " ","")
@@ -1566,43 +1413,43 @@ def ririnBot(op):
                                     ret_ += "\n╠❂➣{} ]".format(str(data["title"]))
                                     ret_ += "\n╠❂ https://www.youtube.com{}".format(str(data["href"]))
                                 ret_ += "\n╚══[ ᴛᴏᴛᴀʟ {} ᴠɪᴅᴇᴏ ]".format(len(datas))
-                                ririn.sendMessage(to, str(ret_))
+                                sepri.sendMessage(to, str(ret_))
                             elif cmd.startswith("tr-"):
                                 sep = text.split("-")
                                 sep = sep[1].split(" ")
                                 lang = sep[0]
                                 say = text.replace("tr-" + lang + " ","")
                                 if lang not in list_language["list_translate"]:
-                                    return ririn.sendMessage(to, "Language not found")
+                                    return sepri.sendMessage(to, "Language not found")
                                 translator = Translator()
                                 hasil = translator.translate(say, dest=lang)
                                 A = hasil.text
-                                ririn.sendMessage(to, str(A))
+                                sepri.sendMessage(to, str(A))
 # Pembatas Script #
 # Pembatas Script #
                         if text.lower() == "mykey":
-                            ririn.sendMessage(to, "ᴋᴇʏᴄᴏᴍᴍᴀɴᴅ sᴀᴀᴛ ɪɴɪ [ {} ]".format(str(wait["keyCommand"])))
+                            sepri.sendMessage(to, "ᴋᴇʏᴄᴏᴍᴍᴀɴᴅ sᴀᴀᴛ ɪɴɪ [ {} ]".format(str(settings["keyCommand"])))
                         elif text.lower() == "setkey on":
-                            wait["setKey"] = True
-                            ririn.sendMessage(to, "ʙᴇʀʜᴀsɪʟ ᴍᴇɴɢᴀᴋᴛɪғᴋᴀɴ sᴇᴛᴋᴇʏ")
+                            settings["setKey"] = True
+                            sepri.sendMessage(to, "ʙᴇʀʜᴀsɪʟ ᴍᴇɴɢᴀᴋᴛɪғᴋᴀɴ sᴇᴛᴋᴇʏ")
                         elif text.lower() == "setkey off":
-                            wait["setKey"] = False
-                            ririn.sendMessage(to, "ʙᴇʀʜᴀsɪʟ ᴍᴇɴᴏɴᴀᴋᴛɪғᴋᴀɴ sᴇᴛᴋᴇʏ")
+                            settings["setKey"] = False
+                            sepri.sendMessage(to, "ʙᴇʀʜᴀsɪʟ ᴍᴇɴᴏɴᴀᴋᴛɪғᴋᴀɴ sᴇᴛᴋᴇʏ")
 # Pembatas Script #
                     elif msg.contentType == 1:
-                        if wait["changePictureProfile"] == True:
-                            path = ririn.downloadObjectMsg(msg_id)
-                            wait["changePictureProfile"] = False
-                            ririn.updateProfilePicture(path)
-                            ririn.sendMessage(to, "sᴜᴄᴄᴇs ᴄʜᴀɴɢᴇ ᴘʜᴏᴛᴏ ᴘʀᴏғɪʟᴇ")
+                        if settings["changePictureProfile"] == True:
+                            path = sepri.downloadObjectMsg(msg_id)
+                            settings["changePictureProfile"] = False
+                            sepri.updateProfilePicture(path)
+                            sepri.sendMessage(to, "sᴜᴄᴄᴇs ᴄʜᴀɴɢᴇ ᴘʜᴏᴛᴏ ᴘʀᴏғɪʟᴇ")
                         if msg.toType == 2:
-                            if to in wait["changeGroupPicture"]:
-                                path = ririn.downloadObjectMsg(msg_id)
-                                wait["changeGroupPicture"].remove(to)
-                                ririn.updateGroupPicture(to, path)
-                                ririn.sendMessage(to, "sᴜᴄᴄᴇs ᴄʜᴀɴɢᴇ ᴘʜᴏᴛᴏ ɢʀᴏᴜᴘ")
+                            if to in settings["changeGroupPicture"]:
+                                path = sepri.downloadObjectMsg(msg_id)
+                                settings["changeGroupPicture"].remove(to)
+                                sepri.updateGroupPicture(to, path)
+                                sepri.sendMessage(to, "sᴜᴄᴄᴇs ᴄʜᴀɴɢᴇ ᴘʜᴏᴛᴏ ɢʀᴏᴜᴘ")
                     elif msg.contentType == 7:
-                        if wait["checkSticker"] == True:
+                        if settings["checkSticker"] == True:
                             stk_id = msg.contentMetadata['STKID']
                             stk_ver = msg.contentMetadata['STKVER']
                             pkg_id = msg.contentMetadata['STKPKGID']
@@ -1611,19 +1458,19 @@ def ririnBot(op):
                             ret_ += "\n╠❂➣ sᴛɪᴄᴋᴇʀ ᴘᴀᴄᴋᴀɢᴇs ɪᴅ : {}".format(pkg_id)
                             ret_ += "\n╠❂➣ sᴛɪᴄᴋᴇʀ ᴠᴇʀsɪᴏɴ : {}".format(stk_ver)
                             ret_ += "\n╠❂➣ sᴛɪᴄᴋᴇʀ ᴜʀʟ : line://shop/detail/{}".format(pkg_id)
-                            ret_ += "\n╚════[ ✯ ᴅɴᴀ ʙᴏᴛ ✯ ]"
-                            ririn.sendMessage(to, str(ret_))
+                            ret_ += "\n╚════[ ✯ SepriBot✯ ]"
+                            sepri.sendMessage(to, str(ret_))
                     elif msg.contentType == 13:
-                        if wait["checkContact"] == True:
+                        if settings["checkContact"] == True:
                             try:
-                                contact = ririn.getContact(msg.contentMetadata["mid"])
-                                if ririn != None:
-                                    cover = ririn.getProfileCoverURL(msg.contentMetadata["mid"])
+                                contact = sepri.getContact(msg.contentMetadata["mid"])
+                                if sepri != None:
+                                    cover = sepri.getProfileCoverURL(msg.contentMetadata["mid"])
                                 else:
                                     cover = "Tidak dapat masuk di line channel"
                                 path = "http://dl.profile.line-cdn.net/{}".format(str(contact.pictureStatus))
                                 try:
-                                    ririn.sendImageWithURL(to, str(path))
+                                    sepri.sendImageWithURL(to, str(path))
                                 except:
                                     pass
                                 ret_ = "╔═══[ ᴅᴇᴛᴀɪʟs ᴄᴏɴᴛᴀᴄᴛ ]"
@@ -1632,16 +1479,16 @@ def ririnBot(op):
                                 ret_ += "\n╠❂➣ ʙɪᴏ : {}".format(str(contact.statusMessage))
                                 ret_ += "\n╠❂➣ ɢᴀᴍʙᴀʀ ᴘʀᴏғɪʟᴇ : http://dl.profile.line-cdn.net/{}".format(str(contact.pictureStatus))
                                 ret_ += "\n╠❂➣ ɢᴀᴍʙᴀʀ ᴄᴏᴠᴇʀ : {}".format(str(cover))
-                                ret_ += "\n╚════[ ✯ ᴅɴᴀ ʙᴏᴛ ✯ ]"
-                                ririn.sendMessage(to, str(ret_))
+                                ret_ += "\n╚════[ ✯ SepriBot✯ ]"
+                                sepri.sendMessage(to, str(ret_))
                             except:
-                                ririn.sendMessage(to, "ᴋᴏɴᴛᴀᴋ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ")
+                                sepri.sendMessage(to, "ᴋᴏɴᴛᴀᴋ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ")
                     elif msg.contentType == 16:
-                        if wait["checkPost"] == True:
+                        if settings["checkPost"] == True:
                             try:
                                 ret_ = "╔════[ ᴅᴇᴛᴀɪʟs ᴘᴏsᴛ ]"
                                 if msg.contentMetadata["serviceType"] == "GB":
-                                    contact = ririn.getContact(sender)
+                                    contact = sepri.getContact(sender)
                                     auth = "\n╠❂➣ ᴀᴜᴛʜᴏʀ : {}".format(str(contact.displayName))
                                 else:
                                     auth = "\n╠❂➣ ᴀᴜᴛʜᴏʀ : {}".format(str(msg.contentMetadata["serviceName"]))
@@ -1670,25 +1517,24 @@ def ririnBot(op):
                                 if "text" in msg.contentMetadata:
                                     text = "\n╠❂➣ ɴᴏᴛᴇ : {}".format(str(msg.contentMetadata["text"]))
                                     ret_ += text
-                                ret_ += "\n╚════[ ✯ ᴅɴᴀ ʙᴏᴛ ✯ ]"
-                                ririn.sendMessage(to, str(ret_))
+                                ret_ += "\n╚════[ ✯ SepriBot✯ ]"
+                                sepri.sendMessage(to, str(ret_))
                             except:
-                                ririn.sendMessage(to, "ɪɴᴠᴀʟɪᴅ ᴘᴏsᴛ")
+                                sepri.sendMessage(to, "ɪɴᴠᴀʟɪᴅ ᴘᴏsᴛ")
             except Exception as error:
                 logError(error)
                 traceback.print_tb(error.__traceback__)
                 
         if op.type == 26:
             msg = op.message
-            if wait["autoResponPc"] == True:
+            if settings["detectMentionPc"] == True:
                 if msg.toType == 0:
-                    ririn.sendChatChecked(msg._from,msg.id)
-                    contact = ririn.getContact(msg._from)
+                    sepri.sendChatChecked(msg._from,msg.id)
+                    contact = sepri.getContact(msg._from)
                     cName = contact.displayName
-                    balas = ["╔════════════════════╗\n                   「ᴀᴜᴛᴏ ʀᴇᴘʟʏ」\n                             ʙʏ:\n                    ✰ ᴅɴᴀ ʙᴏᴛ ✰\n╚════════════════════╝\n\nʜᴀʟʟᴏ 「" + cName + "」\nᴍᴏʜᴏɴ ᴍᴀᴀғ sᴀʏᴀ sᴇᴅᴀɴɢ sɪʙᴜᴋ, ɪɴɪ ᴀᴅᴀʟᴀʜ ᴘᴇsᴀɴ ᴏᴛᴏᴍᴀᴛɪs, ᴊɪᴋᴀ ᴀᴅᴀ ʏᴀɴɢ ᴘᴇɴᴛɪɴɢ ᴍᴏʜᴏɴ ʜᴜʙᴜɴɢɪ sᴀʏᴀ ɴᴀɴᴛɪ, ᴛᴇʀɪᴍᴀᴋᴀsɪʜ...","╔════════════════════╗\n                   「ᴀᴜᴛᴏ ʀᴇᴘʟʏ」\n                             ʙʏ:\n                    ✰ ᴅɴᴀ ʙᴏᴛ ✰\n╚════════════════════╝\n\nʜᴀʟʟᴏ 「" + cName + "」\nsᴀʏᴀ ʟᴀɢɪ sɪʙᴜᴋ ʏᴀ ᴋᴀᴋ ᴊᴀɴɢᴀɴ ᴅɪɢᴀɴɢɢᴜ","╔════════════════════╗\n                   「ᴀᴜᴛᴏ ʀᴇᴘʟʏ」\n                             ʙʏ:\n                    ✰ ᴅɴᴀ ʙᴏᴛ ✰\n╚════════════════════╝\n\nʜᴀʟʟᴏ 「" + cName + "」\nsᴀʏᴀ sᴇᴅᴀɴɢ ᴛɪᴅᴜʀ ᴋᴀᴋ"]
-                    dee = "" + random.choice(balas)
-                    ririn.sendImageWithURL(msg._from, "http://dl.profile.line-cdn.net{}".format(contact.picturePath))
-                    ririn.sendMessage(msg._from,dee)
+                    balas = ["╔════════════════════╗\n                   「ᴀᴜᴛᴏ ʀᴇᴘʟʏ」\n                             ʙʏ:\n                    ✰ SepriBot✰\n╚════════════════════╝\n\nʜᴀʟʟᴏ 「" + cName + "」\nᴍᴏʜᴏɴ ᴍᴀᴀғ sᴀʏᴀ sᴇᴅᴀɴɢ sɪʙᴜᴋ, ɪɴɪ ᴀᴅᴀʟᴀʜ ᴘᴇsᴀɴ ᴏᴛᴏᴍᴀᴛɪs, ᴊɪᴋᴀ ᴀᴅᴀ ʏᴀɴɢ ᴘᴇɴᴛɪɴɢ ᴍᴏʜᴏɴ ʜᴜʙᴜɴɢɪ sᴀʏᴀ ɴᴀɴᴛɪ, ᴛᴇʀɪᴍᴀᴋᴀsɪʜ...","╔════════════════════╗\n                   「ᴀᴜᴛᴏ ʀᴇᴘʟʏ」\n                             ʙʏ:\n                    ✰ SepriBot✰\n╚════════════════════╝\n\nʜᴀʟʟᴏ 「" + cName + "」\nsᴀʏᴀ ʟᴀɢɪ sɪʙᴜᴋ ʏᴀ ᴋᴀᴋ ᴊᴀɴɢᴀɴ ᴅɪɢᴀɴɢɢᴜ","╔════════════════════╗\n                   「ᴀᴜᴛᴏ ʀᴇᴘʟʏ」\n                             ʙʏ:\n                    ✰ SepriBot✰\n╚════════════════════╝\n\nʜᴀʟʟᴏ 「" + cName + "」\nsᴀʏᴀ sᴇᴅᴀɴɢ ᴛɪᴅᴜʀ ᴋᴀᴋ"]
+                    sepri.sendImageWithURL(msg._from, "http://dl.profile.line-cdn.net{}".format(contact.picturePath))
+                    sepri.sendMessage(msg._from,)
                 
         if op.type == 26:
             try:
@@ -1700,7 +1546,7 @@ def ririnBot(op):
                 sender = msg._from
                 if msg.toType == 0 or msg.toType == 1 or msg.toType == 2:
                     if msg.toType == 0:
-                        if sender != ririn.profile.mid:
+                        if sender != sepri.profile.mid:
                             to = sender
                         else:
                             to = receiver
@@ -1708,22 +1554,22 @@ def ririnBot(op):
                         to = receiver
                     elif msg.toType == 2:
                         to = receiver
-                    if wait["autoRead"] == True:
-                        ririn.sendChatChecked(to, msg_id)
+                    if settings["autoRead"] == True:
+                        sepri.sendChatChecked(to, msg_id)
                     if to in read["readPoint"]:
                         if sender not in read["ROM"][to]:
                             read["ROM"][to][sender] = True
-                    if sender in wait["mimic"]["target"] and wait["mimic"]["status"] == True and wait["mimic"]["target"][sender] == True:
+                    if sender in settings["mimic"]["target"] and settings["mimic"]["status"] == True and settings["mimic"]["target"][sender] == True:
                         text = msg.text
                         if text is not None:
-                            ririn.sendMessage(msg.to,text)
-                    if wait["unsendMessage"] == True:
+                            sepri.sendMessage(msg.to,text)
+                    if settings["unsendMessage"] == True:
                         try:
                             msg = op.message
                             if msg.toType == 0:
-                                ririn.log("[{} : {}]".format(str(msg._from), str(msg.text)))
+                                sepri.log("[{} : {}]".format(str(msg._from), str(msg.text)))
                             else:
-                                ririn.log("[{} : {}]".format(str(msg.to), str(msg.text)))
+                                sepri.log("[{} : {}]".format(str(msg.to), str(msg.text)))
                                 msg_dict[msg.id] = {"text": msg.text, "from": msg._from, "createdTime": msg.createdTime, "contentType": msg.contentType, "contentMetadata": msg.contentMetadata}
                         except Exception as error:
                             logError(error)
@@ -1731,7 +1577,7 @@ def ririnBot(op):
                         if text is None:
                             return
                         if "/ti/g/" in msg.text.lower():
-                            if wait["autoJoinTicket"] == True:
+                            if settings["autoJoinTicket"] == True:
                                 link_re = re.compile('(?:line\:\/|line\.me\/R)\/ti\/g\/([a-zA-Z0-9_-]+)?')
                                 links = link_re.findall(text)
                                 n_links = []
@@ -1739,35 +1585,34 @@ def ririnBot(op):
                                     if l not in n_links:
                                         n_links.append(l)
                                 for ticket_id in n_links:
-                                    group = ririn.findGroupByTicket(ticket_id)
-                                    ririn.acceptGroupInvitationByTicket(group.id,ticket_id)
-                                    ririn.sendMessage(to, "sᴜᴄᴄᴇssғᴜʟʟʏ ᴇɴᴛᴇʀᴇᴅ ᴛʜᴇ ɢʀᴏᴜᴘ %s" % str(group.name))
+                                    group = sepri.findGroupByTicket(ticket_id)
+                                    sepri.acceptGroupInvitationByTicket(group.id,ticket_id)
+                                    sepri.sendMessage(to, "sᴜᴄᴄᴇssғᴜʟʟʏ ᴇɴᴛᴇʀᴇᴅ ᴛʜᴇ ɢʀᴏᴜᴘ %s" % str(group.name))
                         if 'MENTION' in msg.contentMetadata.keys()!= None:
                             names = re.findall(r'@(\w+)', text)
                             mention = ast.literal_eval(msg.contentMetadata['MENTION'])
                             mentionees = mention['MENTIONEES']
                             lists = []
                             for mention in mentionees:
-                                if ririnMid in mention["M"]:
-                                    if wait["autoRespon"] == True:
-                                    	ririn.sendChatChecked(msg._from,msg.id)
-                                    	contact = ririn.getContact(msg._from)
-                                    	ririn.sendImageWithURL(msg._from, "http://dl.profile.line-cdn.net{}".format(contact.picturePath))
+                                if sepriMid in mention["M"]:
+                                    if settings["detectMention"] == True:
+                                    	sepri.sendChatChecked(msg._from,msg.id)
+                                    	contact = sepri.getContact(msg._from)
+                                    	sepri.sendImageWithURL(msg._from, "http://dl.profile.line-cdn.net{}".format(contact.picturePath))
                                     	sendMention(sender, "ᴏɪ ᴍʙʟᴏ @!      ,\nɴɢᴀᴘᴀɪɴ ᴛᴀɢ ᴛᴀɢ ɢᴡ", [sender])
-                                    	dee = "" + random.choice(balas)
                                     break
             except Exception as error:
                 logError(error)
                 traceback.print_tb(error.__traceback__)
         if op.type == 65:
             print ("[ 65 ] NOTIFIED DESTROY MESSAGE")
-            if wait["unsendMessage"] == True:
+            if settings["unsendMessage"] == True:
                 try:
                     at = op.param1
                     msg_id = op.param2
                     if msg_id in msg_dict:
                         if msg_dict[msg_id]["from"]:
-                            contact = ririn.getContact(msg_dict[msg_id]["from"])
+                            contact = sepri.getContact(msg_dict[msg_id]["from"])
                             if contact.displayNameOverridden != None:
                                 name_ = contact.displayNameOverridden
                             else:
@@ -1780,7 +1625,7 @@ def ririnBot(op):
                                 sendMention(at, str(ret_), [contact.mid])
                             del msg_dict[msg_id]
                         else:
-                            ririn.sendMessage(at,"sᴇɴᴛᴍᴇssᴀɢᴇ ᴄᴀɴᴄᴇʟʟᴇᴅ,ʙᴜᴛ ɪ ᴅɪᴅɴ'ᴛ ʜᴀᴠᴇ ʟᴏɢ ᴅᴀᴛᴀ.\nsᴏʀʀʏ > <")
+                            sepri.sendMessage(at,"sᴇɴᴛᴍᴇssᴀɢᴇ ᴄᴀɴᴄᴇʟʟᴇᴅ,ʙᴜᴛ ɪ ᴅɪᴅɴ'ᴛ ʜᴀᴠᴇ ʟᴏɢ ᴅᴀᴛᴀ.\nsᴏʀʀʏ > <")
                 except Exception as error:
                     logError(error)
                     traceback.print_tb(error.__traceback__)
@@ -1804,11 +1649,11 @@ def ririnBot(op):
                                 if " " in Name:
                                     nick = Name.split(' ')
                                     if len(nick) == 2:
-                                    	ririn.sendMention(op.param1, "ᴡᴏʏ ☞ @! ☜ \nᴅɪᴇᴍ ᴅɪᴇᴍ ʙᴀᴇ...\nsɪɴɪ ɪᴋᴜᴛ ɴɢᴏᴘɪ", [op.param2])
+                                    	sepri.sendMention(op.param1, "ᴡᴏʏ ☞ @! ☜ \nᴅɪᴇᴍ ᴅɪᴇᴍ ʙᴀᴇ...\nsɪɴɪ ɪᴋᴜᴛ ɴɢᴏᴘɪ", [op.param2])
                                     else:
-                                    	ririn.sendMessage(op.param1, "ᴍʙʟᴏ ☞ @! ☜ \nɴɢɪɴᴛɪᴘ ᴅᴏᴀɴɢ ʟᴜ\nsɪɴɪ ɢᴀʙᴜɴɢ", [op.param2])
+                                    	sepri.sendMessage(op.param1, "ᴍʙʟᴏ ☞ @! ☜ \nɴɢɪɴᴛɪᴘ ᴅᴏᴀɴɢ ʟᴜ\nsɪɴɪ ɢᴀʙᴜɴɢ", [op.param2])
                                 else:
-                                	ririn.sendMessage(op.param1, "ᴛᴏɴɢ ☞ @! ☜ \nɴɢᴀᴘᴀɪɴ ʟᴜ...\nɢᴀʙᴜɴɢ ᴄʜᴀᴛ sɪɴɪ", [op.param2])
+                                	sepri.sendMessage(op.param1, "ᴛᴏɴɢ ☞ @! ☜ \nɴɢᴀᴘᴀɪɴ ʟᴜ...\nɢᴀʙᴜɴɢ ᴄʜᴀᴛ sɪɴɪ", [op.param2])
                         else:
                             pass
                     else:
@@ -1840,11 +1685,11 @@ def ririnBot(op):
 while True:
     try:
         delete_log()
-        ops = ririnPoll.singleTrace(count=50)
+        ops = sepriPoll.singleTrace(count=50)
         if ops is not None:
             for op in ops:
-                ririnBot(op)
-                ririnPoll.setRevision(op.revision)
+                sepriBot(op)
+                sepriPoll.setRevision(op.revision)
     except Exception as error:
         logError(error)
         
